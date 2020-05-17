@@ -1,0 +1,46 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@data-provider/core": "2.1.2",
+    "@data-provider/browser-storage": "2.0.3",
+    "@data-provider/react": "1.0.2",
+    "prop-types": "15.7.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-redux": "7.2.0",
+    "redux": "4.0.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "serve": "serve -l 3000",
+    "build:serve": "npm run build && npm run serve",
+    "cypress:install": "cypress install",
+    "cypress:verify": "cypress verify",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:ci": "start-server-and-test build:serve http-get://localhost:3000 cypress:run"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "react-scripts": "3.4.1",
+    "babel-plugin-module-resolver": "4.0.0",
+    "cypress": "4.4.1",
+    "serve": "11.3.0",
+    "start-server-and-test": "1.11.0"
+  }
+}
