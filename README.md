@@ -70,3 +70,9 @@ mailosaurDownloadAttachment(attachmentId)
 mailosaurDownloadMessage(messageId)
 mailosaurGetSpamAnalysis(messageId)
 ```
+
+### Note on parameters
+
+- **`serverId`** - Found on the servers list within Mailosaur.
+- **`server`** - A valid server object.
+- **`critera`** - An object containing either `{ sentTo: 'someone@example.com' }`, `{ subject: 'Something' }` or `{ body: 'Activate your account' }`.
