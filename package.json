@@ -1,6 +1,6 @@
 {
-  "name": "mailosaur-cypress",
-  "version": "0.2.0",
+  "name": "cypress-mailosaur",
+  "version": "1.0.0",
   "description": "Extends Cypress' cy commands with Mailosaur methods.",
   "keywords": [
     "cypress",
@@ -12,7 +12,7 @@
   ],
   "author": "Mailosaur Ltd",
   "license": "MIT",
-  "repository": "https://github.com/mailosaur/mailosaur-cypress",
+  "repository": "https://github.com/mailosaur/cypress-mailosaur",
   "files": [
     "src"
   ],

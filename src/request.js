@@ -8,7 +8,7 @@ class Request {
     this.headers = {
       Accept: 'application/json',
       Authorization: `Basic ${encodedKey}`,
-      'User-Agent': `mailosaur-cypress/${pkg.version}`
+      'User-Agent': `cypress-mailosaur/${pkg.version}`
     };
   }
 

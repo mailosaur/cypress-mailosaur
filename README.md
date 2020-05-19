@@ -1,4 +1,4 @@
-# mailosaur-cypress
+# cypress-mailosaur
 
 This package provides [Cypress](https://cypress.io) commands to help you test email and SMS as part of end-to-end testing.
 
@@ -7,7 +7,7 @@ This package provides [Cypress](https://cypress.io) commands to help you test em
 ### 1. Install via `npm`
 
 ```sh
-npm install mailosaur-cypress --save-dev
+npm install cypress-mailosaur --save-dev
 ```
 
 ### 2. Include the commands
@@ -15,7 +15,7 @@ npm install mailosaur-cypress --save-dev
 Add the following line to `cypress/support/index.js`:
 
 ```js
-import 'mailosaur-cypress'
+import 'cypress-mailosaur'
 ```
 
 ### 3. Add your Mailosaur API key as an environment variable

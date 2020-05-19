@@ -5,7 +5,7 @@ module.exports = {
       {
         root: ["."],
         alias: {
-          "mailosaur-cypress": `../../`
+          "cypress-mailosaur": `../../`
         }
       }
     ]
