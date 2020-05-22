@@ -20,7 +20,7 @@ import 'cypress-mailosaur'
 
 ### 3. Authenticate
 
-Mailosaur commands need your Mailosaur API key to work. Your can get your key via the [account settings](https://mailosaur.com/app/account/api-access) screen.
+Mailosaur commands need your Mailosaur API key to work. You can get your key via the [account settings](https://mailosaur.com/app/account/api-access) screen.
 
 #### Option 1: Add API key to `cypress.json` 
 
