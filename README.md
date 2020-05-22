@@ -18,12 +18,36 @@ Add the following line to `cypress/support/index.js`:
 import 'cypress-mailosaur'
 ```
 
-### 3. Add your Mailosaur API key as an environment variable
+### 3. Authenticate
 
-Mailosaur commands need your Mailosaur API key to work. We recommend that you set this using an [environment variable](https://docs.cypress.io/guides/guides/environment-variables.html):
+Mailosaur commands need your Mailosaur API key to work. Your can get your key via the [account settings](https://mailosaur.com/app/account/api-access) screen.
+
+#### Option 1: Add API key to `cypress.json` 
+
+```
+{  
+  "env": {
+    "MAILOSAUR_API_KEY": "your-key-here"
+  }
+}
+```
+
+#### Option 2: Add API key to a `cypress.env.json` file
+
+You can create your own `cypress.env.json` file that Cypress will automatically check. This is useful because if you add `cypress.env.json` to your `.gitignore` file, the values in here can be different for each developer machine.
+
+```
+{  
+  "MAILOSAUR_API_KEY": "your-key-here"
+}
+```
+
+#### Option 3: Set API key via a system environment variable
+
+To set the environment variable on your machine, it needs to be prefixed with either `CYPRESS_` or `cypress_`.
 
 ```sh
-export CYPRESS_MAILOSAUR_API_KEY=yourapikey
+export CYPRESS_MAILOSAUR_API_KEY=your-key-here
 ```
 
 ## Example usage
