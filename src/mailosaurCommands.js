@@ -136,11 +136,14 @@ class MailosaurCommands {
         });
     };
 
-    cy.wrap(null).then(() => (
+    cy.wrap(
       new Cypress.Promise((resolve, reject) => {
         fn(resolve, reject)();
-      })
-    ));
+      }),
+      {
+        log: false,
+      }
+    );
   }
 
   mailosaurGetMessagesBySubject(serverId, subject) {
