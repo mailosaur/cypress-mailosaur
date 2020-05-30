@@ -1,6 +1,8 @@
-# cypress-mailosaur
+# Mailosaur Cypress Commands
 
-This package provides [Cypress](https://cypress.io) commands to help you test email and SMS as part of end-to-end testing.
+This package provides [Cypress](https://cypress.io) commands to help you test email and SMS as part of end-to-end testing with [Mailosaur](https://mailosaur.com).
+
+[![](https://github.com/mailosaur/cypress-mailosaur/workflows/CI/badge.svg)](https://github.com/mailosaur/cypress-mailosaur/actions)
 
 ## Install and configure
 
