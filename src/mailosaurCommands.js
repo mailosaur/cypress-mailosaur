@@ -98,6 +98,9 @@ class MailosaurCommands {
       options.timeout = 0; // eslint-disable-line no-param-reassign
     }
 
+    if (typeof options.failOnTimeout !== "boolean") {
+      options.failOnTimeout = true; // eslint-disable-line no-param-reassign
+    }
 
     const fn = (resolve, reject) => () => {
       const reqOptions = this.request.buildOptions('POST', `api/messages/search`);
@@ -125,8 +128,14 @@ class MailosaurCommands {
             pollCount += 1;
 
             // Stop if timeout will be exceeded
-            if (((Date.now() - startTime) + delay) > options.timeout) {
-              return reject(new Error('No matching messages were found in time'));
+            if (Date.now() - startTime + delay > options.timeout) {
+              if (options.failOnTimeout) {
+                return reject(
+                  new Error("No matching messages were found in time")
+                );
+              }
+
+              return resolve(body);
             }
 
             return setTimeout(fn(resolve, reject), delay);
