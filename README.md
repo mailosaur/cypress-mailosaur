@@ -74,6 +74,8 @@ context('Account activation', () => {
 })
 ```
 
+Check out the [full documentation here](https://docs.mailosaur.com/docs/test-email-with-cypress-mailosaur).
+
 ## Commands
 
 ```
