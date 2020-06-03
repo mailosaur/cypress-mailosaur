@@ -85,8 +85,6 @@ const validateEmailSummary = (email) => {
 };
 
 describe('Mailosaur message commands', () => {
-  this.timeout(30000);
-
   const server = Cypress.env('MAILOSAUR_SERVER');
   let emails;
 
