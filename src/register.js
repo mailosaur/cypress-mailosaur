@@ -1,10 +1,7 @@
 const MailosaurCommands = require('./mailosaurCommands');
 
-// TODO make based on configuration
-const apiKey = 'XjORe77uYR2gBkb';
-
 const register = (Cypress) => {
-  const mailosaurCommands = new MailosaurCommands(apiKey);
+  const mailosaurCommands = new MailosaurCommands();
   MailosaurCommands.cypressCommands.forEach((commandName) => {
     Cypress.Commands.add(
       commandName,

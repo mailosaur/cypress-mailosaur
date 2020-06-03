@@ -1,10 +1,15 @@
 /* eslint-disable no-unused-expressions */
 describe('Mailosaur files commands', () => {
+  const server = Cypress.env('MAILOSAUR_SERVER');
   let email;
 
+  if (!server) {
+    throw new Error('You must set the MAILOSAUR_SERVER environment variable to run these tests.');
+  }
+
   before((done) => {
-    cy.mailosaurDeleteAllMessages('inttests')
-      .mailosaurCreateMessage('inttests')
+    cy.mailosaurDeleteAllMessages(server)
+      .mailosaurCreateMessage(server)
       .then((result) => {
         email = result;
         done();

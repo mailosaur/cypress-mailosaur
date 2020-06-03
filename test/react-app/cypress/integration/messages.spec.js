@@ -85,8 +85,12 @@ const validateEmailSummary = (email) => {
 };
 
 describe('Mailosaur message commands', () => {
-  const server = 'inttests';
+  const server = Cypress.env('MAILOSAUR_SERVER');
   let emails;
+
+  if (!server) {
+    throw new Error('You must set the MAILOSAUR_SERVER environment variable to run these tests.');
+  }
 
   before((done) => {
     cy.mailosaurDeleteAllMessages(server)
@@ -122,7 +126,7 @@ describe('Mailosaur message commands', () => {
 
   describe('.mailosaurGetMessage', () => {
     it('should return a match once found', (done) => {
-      const testEmailAddress = 'sample.inttests@mailosaur.io';
+      const testEmailAddress = `sample.${server}@mailosaur.io`;
       cy.mailosaurGetMessage(server, { sentTo: testEmailAddress }).then((result) => {
         validateEmail(result);
         done();

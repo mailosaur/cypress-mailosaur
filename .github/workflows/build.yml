@@ -9,17 +9,41 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
+      max-parallel: 1
       matrix:
         node-version: [10.x, 12.x]
+
+    env:
+      CYPRESS_MAILOSAUR_BASE_URL: https://mailosaur.com/
+      CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
+      CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm run test:ci
+
+  build-next:
+    needs: build
+    runs-on: ubuntu-latest
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        node-version: [10.x, 12.x]
+
+    env:
+      CYPRESS_MAILOSAUR_BASE_URL: https://next.mailosaur.com/
+      CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
+      CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
 
     steps:
     - uses: actions/checkout@v2

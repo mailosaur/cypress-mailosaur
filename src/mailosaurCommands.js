@@ -31,7 +31,7 @@ class MailosaurCommands {
       throw new Error('You must set the CYPRESS_MAILOSAUR_API_KEY environment variable to use the Mailosaur plugin.');
     }
 
-    this.request = new Request({ apiKey, baseUrl: 'https://mailosaur.com/' });
+    this.request = new Request({ apiKey, baseUrl: Cypress.env('MAILOSAUR_BASE_URL') });
   }
 
   mailosaurListServers() {
