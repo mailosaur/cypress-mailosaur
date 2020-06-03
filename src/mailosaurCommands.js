@@ -126,7 +126,9 @@ class MailosaurCommands {
 
             // Stop if timeout will be exceeded
             if (((Date.now() - startTime) + delay) > options.timeout) {
-              return reject(new Error('No matching messages were found in time'));
+              return (options.suppressError === true) ?
+                resolve(body) :
+                reject(new Error('No matching messages were found in time'));
             }
 
             return setTimeout(fn(resolve, reject), delay);

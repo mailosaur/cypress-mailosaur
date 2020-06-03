@@ -232,6 +232,15 @@ describe('Mailosaur message commands', () => {
           done();
         });
       });
+
+      it('should return empty result after timeout with suppressError', (done) => {
+        cy.mailosaurSearchMessages(server, {
+            subject: 'thisphrasedoesnotexist'
+          }, { timeout: 5000, suppressError: true }).then((result) => {
+          expect(result.items).to.be.an('array').that.has.lengthOf(0);
+          done();
+        });
+      });
     });
   });
 
