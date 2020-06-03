@@ -1,6 +1,6 @@
 {
   "name": "cypress-mailosaur",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Extends Cypress' cy commands with Mailosaur methods.",
   "keywords": [
     "cypress",
