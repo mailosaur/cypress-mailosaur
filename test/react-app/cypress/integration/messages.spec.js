@@ -102,7 +102,7 @@ describe('Mailosaur message commands', () => {
       .mailosaurListMessages(server)
       .then(() => (
         // Allow 2 seconds for any SMTP processing
-        new Promise(r => setTimeout(r, 5000))
+        new Promise(r => setTimeout(r, 2000))
       ))
       .then((result) => {
         console.log('result');
