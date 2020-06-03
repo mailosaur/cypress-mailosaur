@@ -8,7 +8,8 @@ on:
     types: [created]
 
 env:
-  CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
+  CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
+  CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
 
 jobs:
   build:
