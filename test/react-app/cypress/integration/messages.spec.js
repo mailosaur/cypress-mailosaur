@@ -100,7 +100,12 @@ describe('Mailosaur message commands', () => {
       .mailosaurCreateMessage(server)
       .mailosaurCreateMessage(server)
       .mailosaurListMessages(server)
+      .then(() => (
+        // Allow 2 seconds for any SMTP processing
+        new Promise(r => setTimeout(r, 5000))
+      ))
       .then((result) => {
+        console.log('result');
         emails = result.items;
         done();
       });
@@ -148,7 +153,7 @@ describe('Mailosaur message commands', () => {
   describe('.mailosaurGetMessagesByBody', () => {
     it('should return matching results', (done) => {
       const targetEmail = emails[1];
-      cy.mailosaurGetMessagesByBody(server, 'The Mailosaur Team').then((result) => {
+      cy.mailosaurGetMessagesByBody(server, 'This is a sample email').then((result) => {
         expect(result.items).to.have.lengthOf(5);
         expect(result.items[0].to[0].email).to.equal(targetEmail.to[0].email);
         expect(result.items[0].subject).to.equal(targetEmail.subject);
@@ -199,7 +204,7 @@ describe('Mailosaur message commands', () => {
     describe('by body', () => {
       it('should return matching results', (done) => {
         const targetEmail = emails[1];
-        cy.mailosaurSearchMessages(server, { body: 'The Mailosaur Team' }).then((result) => {
+        cy.mailosaurSearchMessages(server, { body: 'This is a sample email' }).then((result) => {
           expect(result.items).to.have.lengthOf(5);
           expect(result.items[0].to[0].email).to.equal(targetEmail.to[0].email);
           expect(result.items[0].subject).to.equal(targetEmail.subject);
@@ -215,6 +220,15 @@ describe('Mailosaur message commands', () => {
           expect(result.items).to.have.lengthOf(5);
           expect(result.items[0].to[0].email).to.equal(targetEmail.to[0].email);
           expect(result.items[0].subject).to.equal(targetEmail.subject);
+          done();
+        });
+      });
+    });
+
+    describe('no results', () => {
+      it('should return empty result', (done) => {
+        cy.mailosaurSearchMessages(server, { subject: 'thisphrasedoesnotexist' }).then((result) => {
+          expect(result.items).to.be.an('array').that.has.lengthOf(0);
           done();
         });
       });
