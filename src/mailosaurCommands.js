@@ -140,7 +140,10 @@ class MailosaurCommands {
 
     cy.wrap(new Cypress.Promise((resolve, reject) => {
       fn(resolve, reject)();
-    }), { log: false });
+    }), {
+      log: false,
+      timeout: options.timeout + 10000
+    });
   }
 
   mailosaurGetMessagesBySubject(serverId, subject) {
