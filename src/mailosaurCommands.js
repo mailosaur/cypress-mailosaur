@@ -20,7 +20,8 @@ class MailosaurCommands {
       'mailosaurDeleteAllMessages',
       'mailosaurDownloadAttachment',
       'mailosaurDownloadMessage',
-      'mailosaurGetSpamAnalysis'
+      'mailosaurGetSpamAnalysis',
+      'mailosaurGenerateEmailAddress'
     ];
   }
 
@@ -172,6 +173,13 @@ class MailosaurCommands {
 
   mailosaurGetSpamAnalysis(messageId) {
     return this.request.get(`api/analysis/spam/${messageId}`);
+  }
+
+  mailosaurGenerateEmailAddress(serverId) {
+    const host = Cypress.env('MAILOSAUR_SMTP_HOST') || 'mailosaur.io';
+    const random = (Math.random() + 1).toString(36).substring(7);
+    cy.log('hello' + `${random}.${serverId}@${host}`);
+    return cy.wrap(`${random}.${serverId}@${host}`);
   }
 }
 
