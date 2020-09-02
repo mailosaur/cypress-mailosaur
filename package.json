@@ -24,7 +24,7 @@
     "test:ci": "cd test/react-app && npm i && npm run test:ci"
   },
   "peerDependencies": {
-    "cypress": "^2.1.0 || ^3.0.0 || ^4.0.0"
+    "cypress": "^2.1.0 || ^3.0.0 || ^4.0.0 || ^5.0.0"
   },
   "devDependencies": {
     "babel-eslint": "10.1.0",
