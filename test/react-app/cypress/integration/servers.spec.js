@@ -42,7 +42,7 @@ describe('Mailosaur server commands', () => {
     });
 
     it('.mailosaurUpdateServer should update an existing server', (done) => {
-      retrievedServer.name += ' EDITED';
+      retrievedServer.name += ' updated with ellipsis … and emoji 👨🏿‍🚒';
       cy.mailosaurUpdateServer(retrievedServer).then((server) => {
         expect(server.id).to.equal(retrievedServer.id);
         expect(server.name).to.equal(retrievedServer.name);

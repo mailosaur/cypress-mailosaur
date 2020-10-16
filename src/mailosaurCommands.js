@@ -68,6 +68,10 @@ class MailosaurCommands {
   }
 
   mailosaurGetMessage(server, criteria, options = {}) {
+    // Only return 1 result
+    options.page = 0;
+    options.itemsPerPage = 1;
+
     // Default timeout to 10s
     options.timeout = options.timeout || 10000; // eslint-disable-line no-param-reassign
 
@@ -129,7 +133,7 @@ class MailosaurCommands {
             if (((Date.now() - startTime) + delay) > options.timeout) {
               return (options.suppressError === true) ?
                 resolve(body) :
-                reject(new Error('No matching messages were found in time'));
+                reject(new Error('No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this).'));
             }
 
             return setTimeout(fn(resolve, reject), delay);

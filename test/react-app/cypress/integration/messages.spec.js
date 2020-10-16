@@ -226,6 +226,16 @@ describe('Mailosaur message commands', () => {
       });
     });
 
+    describe('with special characters', () => {
+      it('should support special characters', (done) => {
+        const targetEmail = emails[1];
+        cy.mailosaurSearchMessages(server, { subject: 'Search with ellipsis … and emoji 👨🏿‍🚒' }).then((result) => {
+          expect(result.items).to.have.lengthOf(0);
+          done();
+        });
+      });
+    });
+
     describe('no results', () => {
       it('should return empty result', (done) => {
         cy.mailosaurSearchMessages(server, { subject: 'thisphrasedoesnotexist' }).then((result) => {
