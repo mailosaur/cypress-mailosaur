@@ -106,7 +106,6 @@ describe('Mailosaur message commands', () => {
         new Promise(r => setTimeout(r, 2000))
       ))
       .then((result) => {
-        console.log('result');
         emails = result.items;
         done();
       });
@@ -225,6 +224,27 @@ describe('Mailosaur message commands', () => {
         });
       });
     });
+
+    // TODO: All message content is identical, so cannot yet run these tests
+    // describe('with match all', () => {
+    //   it('should return matching results', (done) => {
+    //     const targetEmail = emails[1];
+    //     cy.mailosaurSearchMessages(server, { subject: 'Example message', match: 'ALL' }).then((result) => {
+    //       expect(result.items).to.have.lengthOf(1);
+    //       done();
+    //     });
+    //   });
+    // });
+
+    // describe('with match any', () => {
+    //   it('should return matching results', (done) => {
+    //     const targetEmail = emails[1];
+    //     cy.mailosaurSearchMessages(server, { subject: 'Example message', match: 'ANY' }).then((result) => {
+    //       expect(result.items).to.have.lengthOf(4);
+    //       done();
+    //     });
+    //   });
+    // });
 
     describe('with special characters', () => {
       it('should support special characters', (done) => {
