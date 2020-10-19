@@ -223,6 +223,8 @@ export interface MessageListResult {
  * @class
  * Initializes a new instance of the SearchCriteria class.
  * @constructor
+ * @member {string} [sentFrom] The full email address from which the target email
+ * was sent.
  * @member {string} [sentTo] The full email address to which the target email
  * was sent.
  * @member {string} [subject] The value to seek within the target email's
@@ -235,6 +237,7 @@ export interface MessageListResult {
     
  */
 export interface SearchCriteria {
+    sentFrom?: string;
     sentTo?: string;
     subject?: string;
     body?: string;
@@ -376,6 +379,11 @@ declare namespace Cypress {
         mailosaurGetMessagesByBody(
             serverId: string,
             body: string
+        ): Cypress.Chainable<MessageListResult>;
+
+        mailosaurGetMessagesBySentFrom(
+            serverId: string,
+            sentFrom: string
         ): Cypress.Chainable<MessageListResult>;
 
         mailosaurGetMessagesBySentTo(

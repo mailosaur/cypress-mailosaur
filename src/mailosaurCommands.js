@@ -15,6 +15,7 @@ class MailosaurCommands {
       'mailosaurSearchMessages',
       'mailosaurGetMessagesBySubject',
       'mailosaurGetMessagesByBody',
+      'mailosaurGetMessagesBySentFrom',
       'mailosaurGetMessagesBySentTo',
       'mailosaurDeleteMessage',
       'mailosaurDeleteAllMessages',
@@ -157,6 +158,10 @@ class MailosaurCommands {
 
   mailosaurGetMessagesByBody(serverId, body) {
     return cy.mailosaurSearchMessages(serverId, { body });
+  }
+
+  mailosaurGetMessagesBySentFrom(serverId, sentFrom) {
+    return cy.mailosaurSearchMessages(serverId, { sentFrom });
   }
 
   mailosaurGetMessagesBySentTo(serverId, sentTo) {

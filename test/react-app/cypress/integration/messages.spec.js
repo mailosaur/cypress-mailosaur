@@ -162,6 +162,18 @@ describe('Mailosaur message commands', () => {
     });
   });
 
+  describe('.mailosaurGetMessagesBySentFrom', () => {
+    it('should return matching results', (done) => {
+      const targetEmail = emails[1];
+      cy.mailosaurGetMessagesBySentFrom(server, targetEmail.from[0].email).then((result) => {
+        expect(result.items).to.have.lengthOf(5);
+        expect(result.items[0].from[0].email).to.equal(targetEmail.from[0].email);
+        expect(result.items[0].subject).to.equal(targetEmail.subject);
+        done();
+      });
+    });
+  });
+
   describe('.mailosaurGetMessagesBySentTo', () => {
     it('should return matching results', (done) => {
       const targetEmail = emails[1];
@@ -187,6 +199,20 @@ describe('Mailosaur message commands', () => {
   });
 
   describe('.mailosaurSearchMessages', () => {
+    describe('by sentFrom', () => {
+      it('should return matching results', (done) => {
+        const targetEmail = emails[1];
+        cy.mailosaurSearchMessages(server, {
+          sentFrom: targetEmail.from[0].email
+        }).then((result) => {
+          expect(result.items).to.have.lengthOf(5);
+          expect(result.items[0].from[0].email).to.equal(targetEmail.from[0].email);
+          expect(result.items[0].subject).to.equal(targetEmail.subject);
+          done();
+        });
+      });
+    });
+    
     describe('by sentTo', () => {
       it('should return matching results', (done) => {
         const targetEmail = emails[1];
