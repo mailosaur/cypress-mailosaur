@@ -1,6 +1,6 @@
 # Mailosaur Cypress Commands
 
-This package provides [Cypress](https://cypress.io) commands to help you test email and SMS as part of end-to-end testing with [Mailosaur](https://mailosaur.com).
+[Mailosaur](https://mailosaur.com) lets you automate email and SMS tests, like account verification and password resets, and integrate these into your CI/CD pipeline.
 
 [![](https://github.com/mailosaur/cypress-mailosaur/workflows/CI/badge.svg)](https://github.com/mailosaur/cypress-mailosaur/actions)
 
@@ -17,7 +17,7 @@ npm install cypress-mailosaur --save-dev
 Add the following line to `cypress/support/index.js`:
 
 ```js
-import 'cypress-mailosaur'
+require('cypress-mailosaur');
 ```
 
 ### 3. Authenticate
@@ -52,21 +52,25 @@ To set the environment variable on your machine, it needs to be prefixed with ei
 export CYPRESS_MAILOSAUR_API_KEY=your-key-here
 ```
 
-## Example usage
+## Documentation
+
+Please see the [Cypress client reference](https://mailosaur.com/docs/email-testing/cypress/client-reference/) for the most up-to-date documentation.
+
+## Usage
 
 ```js
 context('Account activation', () => {
   it('should send an activation email', () => {
     cy.mailosaurGetMessage('SERVER_ID', { subject: 'Activate your account' })
       .then(email => {
-        expect(email.subject).to.equal('Activate your account');
+        expect(email.subject).to.equal('Activate your account')
       })
       .then(email => {
-        expect(email.attachments).to.have.lengthOf(0);
+        expect(email.attachments).to.have.lengthOf(0)
       })
       .then(email => {
         const $body = Cypress.$(email.html.body)
-        const buttonText = $body.find('.button.button--green').text();
+        const buttonText = $body.find('.button.button--green').text()
 
         expect(buttonText).to.equal('Activate now')
       })
@@ -74,34 +78,27 @@ context('Account activation', () => {
 })
 ```
 
-Check out the [full documentation here](https://docs.mailosaur.com/docs/test-email-with-cypress-mailosaur).
+## Development
 
-## Commands
+Install all development dependencies:
 
-```
-mailosaurListServers()
-mailosaurCreateServer({ name })
-mailosaurGetServer(serverId)
-mailosaurUpdateServer(serverId, server)
-mailosaurDeleteServer(serverId)
-mailosaurGenerateEmailAddress(serverId)
-mailosaurListMessages(serverId)
-mailosaurCreateMessage(serverId)
-mailosaurGetMessage(serverId, criteria)
-mailosaurGetMessageById(messageId)
-mailosaurSearchMessages(serverId, criteria, options)
-mailosaurGetMessagesBySubject(serverId, subjectSearchText)
-mailosaurGetMessagesByBody(serverId, bodySearchText)
-mailosaurGetMessagesBySentTo(serverId, emailAddress)
-mailosaurDeleteMessage(messageId)
-mailosaurDeleteAllMessages(serverId)
-mailosaurDownloadAttachment(attachmentId)
-mailosaurDownloadMessage(messageId)
-mailosaurGetSpamAnalysis(messageId)
+```sh
+npm i
 ```
 
-### Note on parameters
+The test suite requires the following environment variables to be set:
 
-- **`serverId`** - Found on the servers list within Mailosaur.
-- **`server`** - A valid server object.
-- **`critera`** - An object containing either `{ sentTo: 'someone@example.com' }`, `{ subject: 'Something' }` or `{ body: 'Activate your account' }`.
+```sh
+export CYPRESS_MAILOSAUR_API_KEY=your_api_key
+export CYPRESS_MAILOSAUR_SERVER=server_id
+```
+
+Run all tests:
+
+```sh
+npm test
+```
+
+## Contacting us
+
+You can get us at [support@mailosaur.com](mailto:support@mailosaur.com)
