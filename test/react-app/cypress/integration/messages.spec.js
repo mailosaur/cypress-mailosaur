@@ -290,10 +290,13 @@ describe('Mailosaur message commands', () => {
         });
       });
 
-      it('should return empty result after timeout with suppressError', (done) => {
+      it('should return empty array if errors suppressed', (done) => {
         cy.mailosaurSearchMessages(server, {
-            subject: 'thisphrasedoesnotexist'
-          }, { timeout: 5000, suppressError: true }).then((result) => {
+          sentTo: 'neverfound@example.com'
+        }, {
+          timeout: 1,
+          errorOnTimeout: false
+        }).then((result) => {
           expect(result.items).to.be.an('array').that.has.lengthOf(0);
           done();
         });

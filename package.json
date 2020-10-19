@@ -1,18 +1,20 @@
 {
   "name": "cypress-mailosaur",
-  "version": "1.0.5",
-  "description": "Extends Cypress' cy commands with Mailosaur methods.",
+  "version": "2.0.0",
+  "description": "Extends Cypress' cy commands that let you integrate email and SMS testing into your continuous integration process.",
   "keywords": [
     "cypress",
     "mailosaur",
-    "email-testing",
-    "testing-tools",
+    "email",
+    "sms",
     "testing",
-    "automation"
+    "automation",
+    "testing-tools"
   ],
   "author": "Mailosaur Ltd",
   "license": "MIT",
   "repository": "https://github.com/mailosaur/cypress-mailosaur",
+  "bugs": "https://github.com/mailosaur/mailosaur-node/issues",
   "files": [
     "src"
   ],

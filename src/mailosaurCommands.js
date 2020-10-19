@@ -104,6 +104,9 @@ class MailosaurCommands {
       options.timeout = 0; // eslint-disable-line no-param-reassign
     }
 
+    if (typeof options.errorOnTimeout !== 'boolean') {
+      options.errorOnTimeout = true; // eslint-disable-line no-param-reassign
+    }
 
     const fn = (resolve, reject) => () => {
       const reqOptions = this.request.buildOptions('POST', `api/messages/search`);
@@ -132,7 +135,7 @@ class MailosaurCommands {
 
             // Stop if timeout will be exceeded
             if (((Date.now() - startTime) + delay) > options.timeout) {
-              return (options.suppressError === true) ?
+              return (options.errorOnTimeout === false) ?
                 resolve(body) :
                 reject(new Error('No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this).'));
             }
