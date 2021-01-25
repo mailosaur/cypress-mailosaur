@@ -246,23 +246,6 @@ export interface SearchCriteria {
 
 /**
  * @class
- * Initializes a new instance of the ForwardingRule class.
- * @constructor
- * @member {string} [field] Possible values include: 'from', 'to', 'subject'
- * @member {string} [operator] Possible values include: 'endsWith',
- * 'startsWith', 'contains'
- * @member {string} [value]
- * @member {string} [forwardTo]
- */
-export interface ForwardingRule {
-    field?: string;
-    operator?: string;
-    value?: string;
-    forwardTo?: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the Server class.
  * @constructor
  * @member {string} [id] Unique identifier for the server. Used as username for
@@ -272,8 +255,6 @@ export interface ForwardingRule {
  * @member {array} [users] Users (excluding administrators) who have access to
  * the server.
  * @member {number} [messages] The number of messages currently in the server.
- * @member {array} [forwardingRules] The rules used to manage email forwarding
- * for this server.
  */
 export interface Server {
     id?: string;
@@ -281,7 +262,6 @@ export interface Server {
     name?: string;
     users?: string[];
     messages?: number;
-    forwardingRules?: ForwardingRule[];
 }
 
 /**
