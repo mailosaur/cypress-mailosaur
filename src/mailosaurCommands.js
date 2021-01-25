@@ -118,8 +118,13 @@ class MailosaurCommands {
         .then((result) => {
           const { body, status, headers } = result;
 
-          if (status !== 200) {
-            return reject(new Error(result));
+          switch (status) {
+            case 200:
+              break;
+            case 401:
+              return reject(new Error('Cannot authenticate with Mailosaur (401). Please check your API key.'));
+            default:
+              return reject(new Error(result));
           }
 
           if (options.timeout && !body.items.length) {
