@@ -101,10 +101,6 @@ describe('Mailosaur message commands', () => {
       .mailosaurCreateMessage(server)
       .mailosaurCreateMessage(server)
       .mailosaurListMessages(server)
-      .then(() => (
-        // Allow 2 seconds for any SMTP processing
-        new Promise(r => setTimeout(r, 2000))
-      ))
       .then((result) => {
         emails = result.items;
         done();
@@ -131,7 +127,7 @@ describe('Mailosaur message commands', () => {
 
   describe('.mailosaurGetMessage', () => {
     it('should return a match once found', (done) => {
-      const testEmailAddress = `sample.${server}@mailosaur.io`;
+      const testEmailAddress = `sample@${server}.mailosaur.net`;
       cy.mailosaurGetMessage(server, { sentTo: testEmailAddress }).then((result) => {
         validateEmail(result);
         done();

@@ -193,9 +193,9 @@ class MailosaurCommands {
   }
 
   mailosaurGenerateEmailAddress(serverId) {
-    const host = Cypress.env('MAILOSAUR_SMTP_HOST') || 'mailosaur.io';
+    const host = Cypress.env('MAILOSAUR_SMTP_HOST') || 'mailosaur.net';
     const random = (Math.random() + 1).toString(36).substring(7);
-    return cy.wrap(`${random}.${serverId}@${host}`);
+    return cy.wrap(`${random}@${serverId}.${host}`);
   }
 }
 
