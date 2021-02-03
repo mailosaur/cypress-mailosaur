@@ -127,7 +127,7 @@ describe('Mailosaur message commands', () => {
 
   describe('.mailosaurGetMessage', () => {
     it('should return a match once found', (done) => {
-      const testEmailAddress = `sample${server}@mailosaur.io`;
+      const testEmailAddress = `sample@${server}.mailosaur.net`;
       cy.mailosaurGetMessage(server, { sentTo: testEmailAddress }).then((result) => {
         validateEmail(result);
         done();
