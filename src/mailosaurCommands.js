@@ -121,10 +121,12 @@ class MailosaurCommands {
           switch (status) {
             case 200:
               break;
+            case 400:
+              return reject(new Error(JSON.stringify(result.body)));
             case 401:
               return reject(new Error('Cannot authenticate with Mailosaur (401). Please check your API key.'));
             default:
-              return reject(new Error(result));
+              return reject(new Error(`Status: ${status}, Result: ${JSON.stringify(result)}`));
           }
 
           if (options.timeout && !body.items.length) {
@@ -193,9 +195,9 @@ class MailosaurCommands {
   }
 
   mailosaurGenerateEmailAddress(serverId) {
-    const host = Cypress.env('MAILOSAUR_SMTP_HOST') || 'mailosaur.net';
+    const host = Cypress.env('MAILOSAUR_SMTP_HOST') || 'mailosaur.io';
     const random = (Math.random() + 1).toString(36).substring(7);
-    return cy.wrap(`${random}@${serverId}.${host}`);
+    return cy.wrap(`${random}.${serverId}@${host}`);
   }
 }
 
