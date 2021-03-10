@@ -19,6 +19,7 @@
     "src"
   ],
   "main": "index.js",
+  "types": "src/mailosaurCommands.d.ts",
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "lint": "node_modules/.bin/eslint src test/react-app/src test/react-app/cypress",
