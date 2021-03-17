@@ -289,6 +289,7 @@ export interface ServerCreateOptions {
 }
 
 export interface SearchOptions extends Cypress.Timeoutable {
+    timeout?: number,
     receivedAfter?: Date,
     page?: number,
     itemsPerPage?: number,
