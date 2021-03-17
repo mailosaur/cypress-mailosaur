@@ -1,5 +1,3 @@
-import { cypressCommands } from "./mailosaurCommands";
-
 /**
  * @class
  * Initializes a new instance of the SpamAssassinRule class.
@@ -231,10 +229,9 @@ export interface MessageListResult {
  * subject line.
  * @member {string} [body] The value to seek within the target email's HTML or
  * text body.
- * @member {string} [match] If set to ALL (default), then only results that match all 
- * specified criteria will be returned. If set to ANY, results that match any of the 
+ * @member {string} [match] If set to ALL (default), then only results that match all
+ * specified criteria will be returned. If set to ANY, results that match any of the
  * specified criteria will be returned.
-    
  */
 export interface SearchCriteria {
     sentFrom?: string;
@@ -296,109 +293,112 @@ export interface SearchOptions extends Cypress.Timeoutable {
     suppressError?: boolean
 }
 
-declare namespace Cypress {
-    interface Chainable {
-        /**
-         * @summary List all servers
-         *
-         * Returns a list of your virtual SMTP servers. Servers are returned sorted in
-         * alphabetical order.
-         *
-         */
-        mailosaurListServers(
-        ): Cypress.Chainable<ServerListResult>;
+declare global {
+    namespace Cypress {
+        interface Chainable {
+            /**
+             * @summary List all servers
+             *
+             * Returns a list of your virtual SMTP servers. Servers are returned sorted in
+             * alphabetical order.
+             *
+             */
+            mailosaurListServers(
+            ): Cypress.Chainable<ServerListResult>;
 
-        mailosaurCreateServer(
-            options: ServerCreateOptions
-        ): Cypress.Chainable<Server>;
+            mailosaurCreateServer(
+                options: ServerCreateOptions
+            ): Cypress.Chainable<Server>;
 
-        mailosaurGetServer(
-            serverId: string
-        ): Cypress.Chainable<Server>;
+            mailosaurGetServer(
+                serverId: string
+            ): Cypress.Chainable<Server>;
 
-        mailosaurUpdateServer(
-            server: Server
-        ): Cypress.Chainable<Server>;
+            mailosaurUpdateServer(
+                server: Server
+            ): Cypress.Chainable<Server>;
 
-        mailosaurDeleteServer(
-            serverId: string
-        ): Cypress.Chainable<null>;
+            mailosaurDeleteServer(
+                serverId: string
+            ): Cypress.Chainable<null>;
 
-        mailosaurDeleteAllMessages(
-            serverId: string
-        ): Cypress.Chainable<null>;
+            mailosaurDeleteAllMessages(
+                serverId: string
+            ): Cypress.Chainable<null>;
 
-        mailosaurListMessages(
-            serverId: string
-        ): Cypress.Chainable<MessageListResult>;
+            mailosaurListMessages(
+                serverId: string
+            ): Cypress.Chainable<MessageListResult>;
 
-        mailosaurCreateMessage(
-            serverId: string
-        ): Cypress.Chainable<Message>;
+            mailosaurCreateMessage(
+                serverId: string
+            ): Cypress.Chainable<Message>;
 
-        mailosaurGetMessage(
-            serverId: string,
-            criteria: SearchCriteria,
-            options?: SearchOptions
-        ): Cypress.Chainable<Message>;
+            mailosaurGetMessage(
+                serverId: string,
+                criteria: SearchCriteria,
+                options?: SearchOptions
+            ): Cypress.Chainable<Message>;
 
-        mailosaurGetMessageById(
-            messageId: string
-        ): Cypress.Chainable<Message>;
+            mailosaurGetMessageById(
+                messageId: string
+            ): Cypress.Chainable<Message>;
 
-        mailosaurSearchMessages(
-            serverId: string,
-            criteria: SearchCriteria,
-            options?: SearchOptions
-        ): Cypress.Chainable<MessageListResult>;
+            mailosaurSearchMessages(
+                serverId: string,
+                criteria: SearchCriteria,
+                options?: SearchOptions
+            ): Cypress.Chainable<MessageListResult>;
 
-        mailosaurGetMessagesBySubject(
-            serverId: string,
-            subject: string
-        ): Cypress.Chainable<MessageListResult>;
+            mailosaurGetMessagesBySubject(
+                serverId: string,
+                subject: string
+            ): Cypress.Chainable<MessageListResult>;
 
-        mailosaurGetMessagesByBody(
-            serverId: string,
-            body: string
-        ): Cypress.Chainable<MessageListResult>;
+            mailosaurGetMessagesByBody(
+                serverId: string,
+                body: string
+            ): Cypress.Chainable<MessageListResult>;
 
-        mailosaurGetMessagesBySentFrom(
-            serverId: string,
-            sentFrom: string
-        ): Cypress.Chainable<MessageListResult>;
+            mailosaurGetMessagesBySentFrom(
+                serverId: string,
+                sentFrom: string
+            ): Cypress.Chainable<MessageListResult>;
 
-        mailosaurGetMessagesBySentTo(
-            serverId: string,
-            sentTo: string
-        ): Cypress.Chainable<MessageListResult>;
+            mailosaurGetMessagesBySentTo(
+                serverId: string,
+                sentTo: string
+            ): Cypress.Chainable<MessageListResult>;
 
-        mailosaurDownloadAttachment(
-            attachmentId: string
-        ): Cypress.Chainable<Attachment>;
+            mailosaurDownloadAttachment(
+                attachmentId: string
+            ): Cypress.Chainable<Attachment>;
 
-        mailosaurDownloadMessage(
-            messageId: string
-        ): Cypress.Chainable<string>;
+            mailosaurDownloadMessage(
+                messageId: string
+            ): Cypress.Chainable<string>;
 
-        mailosaurDeleteMessage(
-            messageId: string
-        ): Cypress.Chainable<null>;
+            mailosaurDeleteMessage(
+                messageId: string
+            ): Cypress.Chainable<null>;
 
-        /**
-         * @summary Perform a spam test
-         *
-         * Perform spam testing on the specified email
-         *
-         * @param {string} messageId The identifier of the email to be analyzed.
-         *
-         * @returns {Chainable<SpamAnalysisResult>}
-         */
-        mailosaurGetSpamAnalysis(
-            messageId: string
-        ): Chainable<SpamAnalysisResult>;
+            /**
+             * @summary Perform a spam test
+             *
+             * Perform spam testing on the specified email
+             *
+             * @param {string} messageId The identifier of the email to be analyzed.
+             *
+             * @returns {Chainable<SpamAnalysisResult>}
+             */
+            mailosaurGetSpamAnalysis(
+                messageId: string
+            ): Chainable<SpamAnalysisResult>;
 
-        mailosaurGenerateEmailAddress(
-            serverId: string
-        ): Cypress.Chainable<string>;
+            mailosaurGenerateEmailAddress(
+                serverId: string
+            ): Cypress.Chainable<string>;
+        }
+
     }
 }
