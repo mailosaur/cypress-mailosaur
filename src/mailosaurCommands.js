@@ -6,6 +6,7 @@ class MailosaurCommands {
       'mailosaurListServers',
       'mailosaurCreateServer',
       'mailosaurGetServer',
+      'mailosaurGetServerPassword',
       'mailosaurUpdateServer',
       'mailosaurDeleteServer',
       'mailosaurListMessages',
@@ -46,6 +47,11 @@ class MailosaurCommands {
 
   mailosaurGetServer(serverId) {
     return this.request.get(`api/servers/${serverId}`);
+  }
+
+  mailosaurGetServerPassword(serverId) {
+    return this.request.get(`api/servers/${serverId}/password`)
+      .then((result) => (result.value));
   }
 
   mailosaurUpdateServer(server) {

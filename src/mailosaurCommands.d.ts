@@ -312,6 +312,10 @@ declare global {
                 serverId: string
             ): Cypress.Chainable<Server>;
 
+            mailosaurGetServerPassword(
+                serverId: string
+            ): Cypress.Chainable<string>;
+
             mailosaurUpdateServer(
                 server: Server
             ): Cypress.Chainable<Server>;

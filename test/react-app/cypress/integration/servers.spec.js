@@ -29,11 +29,18 @@ describe('Mailosaur server commands', () => {
     it('.mailosaurGetServer should retrieve an existing server', (done) => {
       cy.mailosaurGetServer(createdServer.id).then((server) => {
         retrievedServer = server;
-          expect(retrievedServer.id).to.equal(createdServer.id);
-          expect(retrievedServer.name).to.equal(createdServer.name);
-          expect(retrievedServer.users).to.be.an('array');
-          expect(retrievedServer.messages).to.be.a('number');
-          done();
+        expect(retrievedServer.id).to.equal(createdServer.id);
+        expect(retrievedServer.name).to.equal(createdServer.name);
+        expect(retrievedServer.users).to.be.an('array');
+        expect(retrievedServer.messages).to.be.a('number');
+        done();
+      });
+    });
+
+    it('.mailosaurGetServerPassword should retrieve password of an existing server', (done) => {
+      cy.mailosaurGetServerPassword(createdServer.id).then((password) => {
+        expect(password).to.have.lengthOf.at.least(8);
+        done();
       });
     });
 
