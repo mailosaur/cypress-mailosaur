@@ -208,7 +208,7 @@ describe('Mailosaur message commands', () => {
         });
       });
     });
-    
+
     describe('by sentTo', () => {
       it('should return matching results', (done) => {
         const targetEmail = emails[1];

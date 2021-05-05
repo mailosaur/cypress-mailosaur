@@ -4,7 +4,8 @@ const pkg = require('../package.json');
 class Request {
   constructor(options) {
     this.baseUrl = options.baseUrl || 'https://mailosaur.com/';
-    const encodedKey = Buffer.from(`${options.apiKey}:`).toString('base64');
+    this.apiKey = options.apiKey;
+    const encodedKey = Buffer.from(`${this.apiKey}:`).toString('base64');
     this.headers = {
       Accept: 'application/json',
       Authorization: `Basic ${encodedKey}`,
@@ -13,6 +14,11 @@ class Request {
   }
 
   buildOptions(method, path) {
+    if (!this.apiKey) {
+      // CYPRESS_ prefix necessary per https://docs.cypress.io/guides/guides/environment-variables.html#Option-3-CYPRESS
+      throw new Error('You must set the CYPRESS_MAILOSAUR_API_KEY environment variable to use the Mailosaur plugin.');
+    }
+
     return {
       method,
       url: `${this.baseUrl}${path}`,

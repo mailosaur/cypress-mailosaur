@@ -3,6 +3,7 @@ const Request = require('./request');
 class MailosaurCommands {
   static get cypressCommands() {
     return [
+      'mailosaurSetApiKey',
       'mailosaurListServers',
       'mailosaurCreateServer',
       'mailosaurGetServer',
@@ -28,12 +29,11 @@ class MailosaurCommands {
   }
 
   constructor() {
-    const apiKey = Cypress.env('MAILOSAUR_API_KEY');
-    if (!apiKey) {
-      // CYPRESS_ prefix necessary per https://docs.cypress.io/guides/guides/environment-variables.html#Option-3-CYPRESS
-      throw new Error('You must set the CYPRESS_MAILOSAUR_API_KEY environment variable to use the Mailosaur plugin.');
-    }
+    const defaultApiKey = Cypress.env('MAILOSAUR_API_KEY');
+    this.mailosaurSetApiKey(defaultApiKey);
+  }
 
+  mailosaurSetApiKey(apiKey) {
     this.request = new Request({ apiKey, baseUrl: Cypress.env('MAILOSAUR_BASE_URL') });
   }
 
