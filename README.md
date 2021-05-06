@@ -112,7 +112,7 @@ describe('Password reset', () => {
 
 ### Step 4 - Write further test cases
 
-You can test pretty many anything with Mailosaur and Cypress, including:
+You can test pretty much anything with Mailosaur and Cypress, including:
 
 - [Test the text content of an email](https://mailosaur.com/docs/test-cases/text-content/)
 - [Test links within an email](https://mailosaur.com/docs/test-cases/links/)
