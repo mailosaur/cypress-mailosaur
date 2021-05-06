@@ -1,28 +1,41 @@
 # Mailosaur Cypress Commands
 
-[Mailosaur](https://mailosaur.com) lets you automate email and SMS tests, like account verification and password resets, and integrate these into your CI/CD pipeline.
-
 [![](https://github.com/mailosaur/cypress-mailosaur/workflows/CI/badge.svg)](https://github.com/mailosaur/cypress-mailosaur/actions)
 
-## Install and configure
+## Test email and SMS messages with Cypress
 
-### 1. Install via `npm`
+Using Cypress and Mailosaur together you can: 
+- Test email, with unlimited test email addresses 
+- Test SMS messages
+- Capture emails with your very own fake SMTP servers
+
+## What is Mailosaur?
+
+[Mailosaur](https://mailosaur.com) is a service that lets you automate email testing (e.g. email verification, password resets, etc.) and SMS testing (e.g. one-time passwords).
+
+Mailosaur also provides dummy SMTP servers to test with; allowing you to catch email in staging environments - preventing email being sent to customers by mistake.
+
+## How do I test email with Cypress?
+
+Follow these steps to start testing email with Cypress:
+
+### Step 1 - Installation
+
+Install the Mailosaur commands via `npm`:
 
 ```sh
 npm install cypress-mailosaur --save-dev
 ```
 
-### 2. Include the commands
-
-Add the following line to `cypress/support/index.js`:
+Once downloaded, add the following line to `cypress/support/index.js` to import the commands into your Cypress project:
 
 ```js
 require('cypress-mailosaur');
 ```
 
-### 3. Authenticate
+### Step 2 - API Authentication
 
-Mailosaur commands need your Mailosaur API key to work. You can get your key via the [account settings](https://mailosaur.com/app/account/api-access) screen.
+Mailosaur commands need your Mailosaur API key to work. You can learn about [managing API keys here](https://mailosaur.com/docs/managing-your-account/api-keys/).
 
 #### Option 1: Add API key to `cypress.json` 
 
@@ -52,29 +65,74 @@ To set the environment variable on your machine, it needs to be prefixed with ei
 export CYPRESS_MAILOSAUR_API_KEY=your-key-here
 ```
 
-## Documentation
+### Step 3 - Write your email test
 
-Please see the [Cypress client reference](https://mailosaur.com/docs/email-testing/cypress/client-reference/) for the most up-to-date documentation.
+For this example, we'll navigate to a password reset page, request a new password link (sent via email), and get that email.
 
-## Usage
+Create a new test spec:
+
+```sh
+touch cypress/integration/password-reset.spec.js
+```
+
+Now edit the file to something like this:
 
 ```js
-context('Account activation', () => {
-  it('should send an activation email', () => {
-    cy.mailosaurGetMessage('SERVER_ID', { subject: 'Activate your account' })
-      .then(email => {
-        expect(email.subject).to.equal('Activate your account')
-      })
-      .then(email => {
-        expect(email.attachments).to.have.lengthOf(0)
-      })
-      .then(email => {
-        const $body = Cypress.$(email.html.body)
-        const buttonText = $body.find('.button.button--green').text()
+describe('Password reset', () => {
+    const serverId = 'abcd1234'
+    const serverDomain = 'abcd1234.mailosaur.net'
+    const emailAddress = 'password-reset@' + serverDomain
 
-        expect(buttonText).to.equal('Activate now')
-      })
-  })
+    it('Makes a Password Reset request', () => {
+        cy.visit('https://github.com/password_reset')
+        cy.title().should('equal', 'Forgot your password?')
+        cy.get('#email_field').type(emailAddress)
+    })
+
+    it('Gets Password Reset email from Mailosaur', () => {
+        cy.mailosaurGetMessage(serverId, {
+            sentTo: emailAddress
+        }).then(email => {
+            expect(email.subject).to.equal('Reset your password');
+            passwordResetLink = email.text.links[0].href;
+        })
+    })
+
+    it('Follows the link from the email', () => {
+        const validPassword = 'delighted cheese jolly cloud'
+
+        cy.visit(passwordResetLink)
+        cy.title().should('contain', 'Change your password')
+        cy.get('#password').type(validPassword)
+        cy.get('#password_confirmation').type(validPassword)
+        cy.get('form').submit()
+    })
+})
+```
+
+### Step 4 - Write further test cases
+
+You can test pretty many anything with Mailosaur and Cypress, including:
+
+- [Test the text content of an email](https://mailosaur.com/docs/test-cases/text-content/)
+- [Test links within an email](https://mailosaur.com/docs/test-cases/links/)
+- [Working with email attachments](https://mailosaur.com/docs/test-cases/attachments/)
+- [Handling images and web beacons](https://mailosaur.com/docs/test-cases/images/)
+- [Perform a spam test](https://mailosaur.com/docs/test-cases/spam/)
+
+For more information, check out the full [Mailosaur docs](https://mailosaur.com/docs/frameworks-and-tools/cypress/) for the most up-to-date guides and troubleshooting tips.
+
+## How do I test SMS with Cypress?
+
+Mailosaur Team, Premium, and Ultimate customers can perform SMS tests with Cypress, whilst Trial account users can just ask support to enable this feature to try it out!
+
+SMS testing works in just the same way as email testing above. However rather than dealing with email addresses, you search using phone numbers instead. For example:
+
+```js
+cy.mailosaurGetMessage(serverId, {
+    sentTo: '447555111222'
+}).then(sms => {
+    expect(sms.text.body).to.equal('Your OTP code is: 123456')
 })
 ```
 
