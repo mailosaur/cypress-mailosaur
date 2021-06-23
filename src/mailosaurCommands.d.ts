@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 /**
  * @class
  * Initializes a new instance of the SpamAssassinRule class.
@@ -283,7 +285,7 @@ export interface ServerCreateOptions {
     name?: string;
 }
 
-export interface SearchOptions extends Cypress.Timeoutable {
+export interface SearchOptions {
     timeout?: number,
     receivedAfter?: Date,
     page?: number,
