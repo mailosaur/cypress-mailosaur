@@ -32,6 +32,15 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm run test:ci
+    - name: Notify on Failure
+      uses: skitionek/notify-microsoft-teams@master
+      if: ${{ failure() }}
+      with:
+        webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        steps: ${{ toJson(steps) }}
+
 
   build:
     needs: build-next
@@ -55,3 +64,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm run test:ci
+    - name: Notify on Failure
+      uses: skitionek/notify-microsoft-teams@master
+      if: ${{ failure() }}
+      with:
+        webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        steps: ${{ toJson(steps) }}
+
