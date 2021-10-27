@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-expressions */
 
-const { describe } = require("mocha");
-
 /* eslint-disable no-unused-vars */ // TODO remove this line
 const isoDateString = new Date().toISOString().slice(0, 10);
 
