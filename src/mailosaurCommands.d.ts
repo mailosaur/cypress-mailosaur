@@ -245,6 +245,50 @@ export interface SearchCriteria {
 
 /**
  * @class
+ * Initializes a new instance of the MessageCreateOptions class.
+ * @constructor
+ * @member {string} [to] The email address to which the email will be sent.
+ * @member {boolean} [send] If true, email will be sent upon creation.
+ * @member {string} [subject] The email subject line.
+ * @member {string} [text] The plain text body of the email. Note that only text or html can be supplied, not both.
+ * @member {string} [html] The HTML body of the email. Note that only text or html can be supplied, not both.
+ */
+ export interface MessageCreateOptions {
+    to?: string;
+    send?: boolean;
+    subject?: string;
+    text?: string;
+    html?: string;
+  }
+  
+  /**
+   * @class
+   * Initializes a new instance of the MessageForwardOptions class.
+   * @constructor
+   * @member {string} [to] The email address to which the email will be sent.
+   * @member {string} [text] Any additional plain text content to forward the email with. Note that only text or html can be supplied, not both.
+   * @member {string} [html] Any additional HTML content to forward the email with. Note that only html or text can be supplied, not both.
+   */
+  export interface MessageForwardOptions {
+    to: string;
+    text?: string;
+    html?: string;
+  }
+  
+  /**
+   * @class
+   * Initializes a new instance of the MessageReplyOptions class.
+   * @constructor
+   * @member {string} [text] Any additional plain text content to include in the reply. Note that only text or html can be supplied, not both.
+   * @member {string} [html] Any additional HTML content to include in the reply. Note that only html or text can be supplied, not both.
+   */
+  export interface MessageReplyOptions {
+    text?: string;
+    html?: string;
+  }
+
+/**
+ * @class
  * Initializes a new instance of the Server class.
  * @constructor
  * @member {string} [id] Unique identifier for the server. Used as username for
@@ -335,7 +379,18 @@ declare global {
             ): Cypress.Chainable<MessageListResult>;
 
             mailosaurCreateMessage(
-                serverId: string
+                serverId: string,
+                options: MessageCreateOptions
+            ): Cypress.Chainable<Message>;
+
+            mailosaurForwardMessage(
+                id: string,
+                options: MessageForwardOptions
+            ): Cypress.Chainable<Message>;
+
+            mailosaurReplyMessage(
+                id: string,
+                options: MessageReplyOptions
             ): Cypress.Chainable<Message>;
 
             mailosaurGetMessage(

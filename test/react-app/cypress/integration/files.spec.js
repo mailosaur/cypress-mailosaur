@@ -9,7 +9,7 @@ describe('Mailosaur files commands', () => {
 
   before((done) => {
     cy.mailosaurDeleteAllMessages(server)
-      .mailosaurCreateMessage(server)
+      .mailosaurCreateMessage(server, {})
       .then((result) => {
         email = result;
         done();

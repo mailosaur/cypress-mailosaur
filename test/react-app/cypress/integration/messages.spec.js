@@ -1,4 +1,7 @@
 /* eslint-disable no-unused-expressions */
+
+const { describe } = require("mocha");
+
 /* eslint-disable no-unused-vars */ // TODO remove this line
 const isoDateString = new Date().toISOString().slice(0, 10);
 
@@ -87,6 +90,7 @@ const validateEmailSummary = (email) => {
 
 describe('Mailosaur message commands', () => {
   const server = Cypress.env('MAILOSAUR_SERVER');
+  const verifiedDomain = Cypress.env('MAILOSAUR_VERIFIED_DOMAIN');
   let emails;
 
   if (!server) {
@@ -95,11 +99,11 @@ describe('Mailosaur message commands', () => {
 
   before((done) => {
     cy.mailosaurDeleteAllMessages(server)
-      .mailosaurCreateMessage(server)
-      .mailosaurCreateMessage(server)
-      .mailosaurCreateMessage(server)
-      .mailosaurCreateMessage(server)
-      .mailosaurCreateMessage(server)
+      .mailosaurCreateMessage(server, {})
+      .mailosaurCreateMessage(server, {})
+      .mailosaurCreateMessage(server, {})
+      .mailosaurCreateMessage(server, {})
+      .mailosaurCreateMessage(server, {})
       .mailosaurListMessages(server)
       .then((result) => {
         emails = result.items;
@@ -318,6 +322,90 @@ describe('Mailosaur message commands', () => {
     it('should delete an email', (done) => {
       const targetEmailId = emails[4].id;
       cy.mailosaurDeleteMessage(targetEmailId).then(done);
+    });
+  });
+
+  (verifiedDomain ? describe : describe.skip)('.mailosaurCreateMessage', () => {
+    it('should send with text content', (done) => {
+      const subject = 'New message';
+      cy.mailosaurCreateMessage(server, {
+        to: `anything@${verifiedDomain}`,
+        send: true,
+        subject,
+        text: 'This is a new email'
+      }).then((message) => {
+        expect(message.id).to.be.ok;
+        expect(message.subject).to.equal(subject);
+        done();
+      });
+    });
+
+    it('should send with HTML content', (done) => {
+      const subject = 'New message';
+      cy.mailosaurCreateMessage(server, {
+        to: `anything@${verifiedDomain}`,
+        send: true,
+        subject,
+        html: '<p>This is a new email.</p>'
+      }).then((message) => {
+        expect(message.id).to.be.ok;
+        expect(message.subject).to.equal(subject);
+        done();
+      });
+    });
+  });
+
+  (verifiedDomain ? describe : describe.skip)('.mailosaurForwardMessage', () => {
+    it('should forward with text content', (done) => {
+      const targetEmailId = emails[0].id;
+      const body = 'Forwarded message';
+      cy.mailosaurForwardMessage(targetEmailId, {
+        to: `anything@${verifiedDomain}`,
+        text: body
+      }).then((message) => {
+        expect(message.id).to.be.ok;
+        expect(message.text.body).to.contain(body);
+        done();
+      });
+    });
+
+    it('should forward with HTML content', (done) => {
+      const targetEmailId = emails[0].id;
+      const body = '<p>Forwarded <strong>HTML</strong> message.</p>';
+      cy.mailosaurForwardMessage(targetEmailId, {
+        to: `anything@${verifiedDomain}`,
+        html: body
+      }).then((message) => {
+        expect(message.id).to.be.ok;
+        expect(message.html.body).to.contain(body);
+        done();
+      });
+    });
+  });
+
+  (verifiedDomain ? describe : describe.skip)('.mailosaurReplyToMessage', () => {
+    it('should reply with text content', (done) => {
+      const targetEmailId = emails[0].id;
+      const body = 'Reply message';
+      cy.mailosaurForwardMessage(targetEmailId, {
+        text: body
+      }).then((message) => {
+        expect(message.id).to.be.ok;
+        expect(message.text.body).to.contain(body);
+        done();
+      });
+    });
+
+    it('should reply with HTML content', (done) => {
+      const targetEmailId = emails[0].id;
+      const body = '<p>Reply <strong>HTML</strong> message.</p>';
+      cy.mailosaurForwardMessage(targetEmailId, {
+        html: body
+      }).then((message) => {
+        expect(message.id).to.be.ok;
+        expect(message.html.body).to.contain(body);
+        done();
+      });
     });
   });
 });

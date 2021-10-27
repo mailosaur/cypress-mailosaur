@@ -12,6 +12,8 @@ class MailosaurCommands {
       'mailosaurDeleteServer',
       'mailosaurListMessages',
       'mailosaurCreateMessage',
+      'mailosaurForwardMessage',
+      'mailosaurReplyToMessage',
       'mailosaurGetMessage',
       'mailosaurGetMessageById',
       'mailosaurSearchMessages',
@@ -70,8 +72,16 @@ class MailosaurCommands {
     return this.request.get(`api/messages?server=${serverId}`);
   }
 
-  mailosaurCreateMessage(serverId) {
-    return this.request.post(`api/messages?server=${serverId}`, {});
+  mailosaurCreateMessage(serverId, messageCreateOptions) {
+    return this.request.post(`api/messages?server=${serverId}`, messageCreateOptions);
+  }
+
+  mailosaurForwardMessage(id, messageForwardOptions) {
+    return this.request.post(`api/messages/${id}/forward`, messageForwardOptions);
+  }
+
+  mailosaurReplyToMessage(id, messageReplyOptions) {
+    return this.request.post(`api/messages/${id}/reply`, messageReplyOptions);
   }
 
   mailosaurGetMessage(server, criteria, options = {}) {
