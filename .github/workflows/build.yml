@@ -11,40 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-next:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    strategy:
-      max-parallel: 1
-      matrix:
-        node-version: [10.x, 12.x]
-
-    env:
-      CYPRESS_MAILOSAUR_BASE_URL: https://next.mailosaur.com/
-      CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
-      CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm i && npm run test:ci
-    - name: Notify on Failure
-      uses: skitionek/notify-microsoft-teams@master
-      if: ${{ failure() }}
-      with:
-        webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
-        needs: ${{ toJson(needs) }}
-        job: ${{ toJson(job) }}
-        overwrite: "{ title: `${workflow} failed for ${repository.name}` }"
-
-
   build:
-    if: ${{ always() }}
-    needs: build-next
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -74,3 +41,34 @@ jobs:
         job: ${{ toJson(job) }}
         overwrite: "{ title: `${workflow} failed for ${repository.name}` }"
 
+  build-next:
+    if: ${{ always() }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        node-version: [10.x, 12.x]
+
+    env:
+      CYPRESS_MAILOSAUR_BASE_URL: https://next.mailosaur.com/
+      CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
+      CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm i && npm run test:ci
+    - name: Notify on Failure
+      uses: skitionek/notify-microsoft-teams@master
+      if: ${{ failure() }}
+      with:
+        webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        overwrite: "{ title: `${workflow} failed for ${repository.name}` }"
