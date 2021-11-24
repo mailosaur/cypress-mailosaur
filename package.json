@@ -24,7 +24,7 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "lint": "node_modules/.bin/eslint src test/react-app/src test/react-app/cypress",
     "test": "npm run tsc && cd test/react-app && npm run test:ci",
-    "test:ci": "npm run lint && cd test/react-app && npm i && npm run test:ci",
+    "test:ci": "cd test/react-app && npm i && npm run test:ci",
     "tsc": "node_modules/.bin/tsc src/mailosaurCommands.d.ts --types node"
   },
   "peerDependencies": {
