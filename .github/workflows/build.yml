@@ -31,7 +31,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm run test:ci
+    - run: npm i && npm run test:ci
     - name: Notify on Failure
       uses: skitionek/notify-microsoft-teams@master
       if: ${{ failure() }}
@@ -64,7 +64,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm run test:ci
+    - run: npm i && npm run test:ci
     - name: Notify on Failure
       uses: skitionek/notify-microsoft-teams@master
       if: ${{ failure() }}
