@@ -43,6 +43,7 @@ jobs:
 
 
   build:
+    if: ${{ always() }}
     needs: build-next
     runs-on: ubuntu-latest
     timeout-minutes: 10
