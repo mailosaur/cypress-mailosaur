@@ -86,8 +86,8 @@ class MailosaurCommands {
 
   mailosaurGetMessage(server, criteria, options = {}) {
     // Only return 1 result
-    options.page = 0;
-    options.itemsPerPage = 1;
+    options.page = 0; // eslint-disable-line no-param-reassign
+    options.itemsPerPage = 1; // eslint-disable-line no-param-reassign
 
     // Default timeout to 10s
     options.timeout = options.timeout || 10000; // eslint-disable-line no-param-reassign

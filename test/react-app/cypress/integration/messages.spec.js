@@ -351,6 +351,35 @@ describe('Mailosaur message commands', () => {
         done();
       });
     });
+
+    it('should send with attachment', (done) => {
+      const subject = 'New message with attachment';
+
+      cy.fixture('cat.png').then(fileContent => {
+        const attachment = {
+          fileName: 'cat.png',
+          content: fileContent,
+          contentType: 'image/png'
+        };
+
+        cy.mailosaurCreateMessage(server, {
+          to: `anything@${verifiedDomain}`,
+          send: true,
+          subject,
+          html: '<p>This is a new email.</p>',
+          attachments: [attachment]
+        }).then((message) => {
+          assert.equal(message.attachments.length, 1, 'Should have attachment');
+          const file1 = message.attachments[0];
+          assert.isOk(file1.id, 'First attachment should have file id');
+          assert.isOk(file1.url);
+          assert.equal(file1.length, 82138, 'First attachment should be correct size');
+          assert.equal(file1.fileName, 'cat.png', 'First attachment should have filename');
+          assert.equal(file1.contentType, 'image/png', 'First attachment should have correct MIME type');
+          done();
+        });
+      });
+    });
   });
 
   (verifiedDomain ? describe : describe.skip)('.mailosaurForwardMessage', () => {
@@ -381,11 +410,12 @@ describe('Mailosaur message commands', () => {
     });
   });
 
+  // TODO - Tested in Node.js client for now due to way emails are created in Cypress plugin tests
   (verifiedDomain ? describe : describe.skip)('.mailosaurReplyToMessage', () => {
-    it('should reply with text content', (done) => {
+    xit('should reply with text content', (done) => {
       const targetEmailId = emails[0].id;
       const body = 'Reply message';
-      cy.mailosaurForwardMessage(targetEmailId, {
+      cy.mailosaurReplyToMessage(targetEmailId, {
         text: body
       }).then((message) => {
         expect(message.id).to.be.ok;
@@ -394,15 +424,42 @@ describe('Mailosaur message commands', () => {
       });
     });
 
-    it('should reply with HTML content', (done) => {
+    xit('should reply with HTML content', (done) => {
       const targetEmailId = emails[0].id;
       const body = '<p>Reply <strong>HTML</strong> message.</p>';
-      cy.mailosaurForwardMessage(targetEmailId, {
+      cy.mailosaurReplyToMessage(targetEmailId, {
         html: body
       }).then((message) => {
         expect(message.id).to.be.ok;
         expect(message.html.body).to.contain(body);
         done();
+      });
+    });
+
+    xit('should reply with attachment', (done) => {
+      const targetEmailId = emails[0].id;
+      const body = '<p>Reply <strong>HTML</strong> message.</p>';
+
+      cy.fixture('cat.png').then(fileContent => {
+        const attachment = {
+          fileName: 'cat.png',
+          content: fileContent,
+          contentType: 'image/png'
+        };
+
+        cy.mailosaurReplyToMessage(targetEmailId, {
+          html: body,
+          attachments: [attachment]
+        }).then((message) => {
+          assert.equal(message.attachments.length, 1, 'Should have attachment');
+          const file1 = message.attachments[0];
+          assert.isOk(file1.id, 'First attachment should have file id');
+          assert.isOk(file1.url);
+          assert.equal(file1.length, 82138, 'First attachment should be correct size');
+          assert.equal(file1.fileName, 'cat.png', 'First attachment should have filename');
+          assert.equal(file1.contentType, 'image/png', 'First attachment should have correct MIME type');
+          done();
+        });
       });
     });
   });

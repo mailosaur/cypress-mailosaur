@@ -96,6 +96,7 @@ export interface MessageContent {
  * @member {uuid} id
  * @member {string} [contentType]
  * @member {string} [fileName]
+ * @member {string} [content]
  * @member {string} [contentId]
  * @member {number} [length]
  * @member {string} [url]
@@ -104,6 +105,7 @@ export interface Attachment {
     id: string;
     contentType?: string;
     fileName?: string;
+    content?: string;
     contentId?: string;
     length?: number;
     url?: string;
@@ -252,40 +254,44 @@ export interface SearchCriteria {
  * @member {string} [subject] The email subject line.
  * @member {string} [text] The plain text body of the email. Note that only text or html can be supplied, not both.
  * @member {string} [html] The HTML body of the email. Note that only text or html can be supplied, not both.
+ * @member {array} [attachments] Any message attachments.
  */
- export interface MessageCreateOptions {
+export interface MessageCreateOptions {
     to?: string;
     send?: boolean;
     subject?: string;
     text?: string;
     html?: string;
-  }
-  
-  /**
-   * @class
-   * Initializes a new instance of the MessageForwardOptions class.
-   * @constructor
-   * @member {string} [to] The email address to which the email will be sent.
-   * @member {string} [text] Any additional plain text content to forward the email with. Note that only text or html can be supplied, not both.
-   * @member {string} [html] Any additional HTML content to forward the email with. Note that only html or text can be supplied, not both.
-   */
-  export interface MessageForwardOptions {
+    attachments?: Attachment[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the MessageForwardOptions class.
+ * @constructor
+ * @member {string} [to] The email address to which the email will be sent.
+ * @member {string} [text] Any additional plain text content to forward the email with. Note that only text or html can be supplied, not both.
+ * @member {string} [html] Any additional HTML content to forward the email with. Note that only html or text can be supplied, not both.
+ */
+export interface MessageForwardOptions {
     to: string;
     text?: string;
     html?: string;
-  }
-  
-  /**
-   * @class
-   * Initializes a new instance of the MessageReplyOptions class.
-   * @constructor
-   * @member {string} [text] Any additional plain text content to include in the reply. Note that only text or html can be supplied, not both.
-   * @member {string} [html] Any additional HTML content to include in the reply. Note that only html or text can be supplied, not both.
-   */
-  export interface MessageReplyOptions {
+}
+
+/**
+ * @class
+ * Initializes a new instance of the MessageReplyOptions class.
+ * @constructor
+ * @member {string} [text] Any additional plain text content to include in the reply. Note that only text or html can be supplied, not both.
+ * @member {string} [html] Any additional HTML content to include in the reply. Note that only html or text can be supplied, not both.
+ * @member {array} [attachments] Any message attachments.
+ */
+export interface MessageReplyOptions {
     text?: string;
     html?: string;
-  }
+    attachments?: Attachment[];
+}
 
 /**
  * @class

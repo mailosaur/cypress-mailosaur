@@ -22,7 +22,7 @@
     "cypress:verify": "cypress verify",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "test:ci": "start-server-and-test build:serve http-get://localhost:3000 cypress:run"
+    "test:ci": "$(npm bin)/start-server-and-test build:serve http-get://localhost:3000 cypress:run"
   },
   "browserslist": {
     "production": [
