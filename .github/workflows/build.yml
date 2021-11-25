@@ -26,6 +26,7 @@ jobs:
       CYPRESS_MAILOSAUR_BASE_URL: https://mailosaur.com/
       CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
       CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
+      CYPRESS_MAILOSAUR_VERIFIED_DOMAIN: ${{ secrets.MAILOSAUR_VERIFIED_DOMAIN }}
 
     steps:
     - uses: actions/checkout@v2
@@ -58,6 +59,7 @@ jobs:
       CYPRESS_MAILOSAUR_BASE_URL: https://next.mailosaur.com/
       CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
       CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
+      CYPRESS_MAILOSAUR_VERIFIED_DOMAIN: ${{ secrets.MAILOSAUR_VERIFIED_DOMAIN }}
 
     steps:
     - uses: actions/checkout@v2
