@@ -78,12 +78,12 @@ class MailosaurCommands {
     return this.request.post(`api/messages?server=${serverId}`, messageCreateOptions);
   }
 
-  mailosaurForwardMessage(id, messageForwardOptions) {
-    return this.request.post(`api/messages/${id}/forward`, messageForwardOptions);
+  mailosaurForwardMessage(messageId, messageForwardOptions) {
+    return this.request.post(`api/messages/${messageId}/forward`, messageForwardOptions);
   }
 
-  mailosaurReplyToMessage(id, messageReplyOptions) {
-    return this.request.post(`api/messages/${id}/reply`, messageReplyOptions);
+  mailosaurReplyToMessage(messageId, messageReplyOptions) {
+    return this.request.post(`api/messages/${messageId}/reply`, messageReplyOptions);
   }
 
   mailosaurGetMessage(server, criteria, options = {}) {

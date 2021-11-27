@@ -619,7 +619,7 @@ declare global {
                 /**
                  * The unique identifier of the message to be forwarded.
                  */
-                id: string,
+                messageId: string,
                 /**
                  * Options to use when forwarding a message.
                  */
@@ -633,7 +633,7 @@ declare global {
                 /**
                  * The unique identifier of the message to be forwarded.
                  */
-                id: string,
+                messageId: string,
                 /**
                  * Options to use when replying to a message.
                  */
@@ -813,8 +813,6 @@ declare global {
              */
             mailosaurGetUsageTransactions(
             ): Cypress.Chainable<Mailosaur.UsageTransactionListResult>;
-
         }
-
     }
 }
