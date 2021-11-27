@@ -277,6 +277,24 @@ declare global {
         }
 
         /**
+         * Message listing options
+         */
+        interface MessageListOptions {
+            /**
+             * Limits results to only messages received after this date/time (default 1 hour ago).
+             */
+            receivedAfter?: Date,
+            /**
+             * Used alongside `itemsPerPage` to paginate through results. This is zero-based, meaning `0` is the first page of results.
+             */
+            page?: number,
+            /**
+             * A limit on the number of results to be returned. This can be set between `1` and `1000`, with the default being `50`.
+             */
+            itemsPerPage?: number
+        }
+
+        /**
          * Options to use when creating a new message.
          */
         interface MessageCreateOptions {
@@ -594,7 +612,11 @@ declare global {
                 /**
                  * The unique identifier of the required server.
                  */
-                serverId: string
+                serverId: string,
+                /**
+                 * Message listing options
+                 */
+                options?: Mailosaur.MessageListOptions
             ): Cypress.Chainable<Mailosaur.MessageListResult>;
 
             /**

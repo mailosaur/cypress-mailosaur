@@ -45,8 +45,8 @@ class MailosaurCommands {
     return this.request.get(`api/servers`);
   }
 
-  mailosaurCreateServer(params) {
-    return this.request.post(`api/servers`, params);
+  mailosaurCreateServer(options) {
+    return this.request.post(`api/servers`, options);
   }
 
   mailosaurGetServer(serverId) {
@@ -70,20 +70,30 @@ class MailosaurCommands {
     return this.request.del(`api/messages?server=${serverId}`);
   }
 
-  mailosaurListMessages(serverId) {
-    return this.request.get(`api/messages?server=${serverId}`);
+  mailosaurListMessages(serverId, options = {}) {
+    const qs = {
+      server: serverId,
+      page: options.page,
+      itemsPerPage: options.itemsPerPage,
+      receivedAfter: options.receivedAfter
+    };
+
+    const reqOptions = this.request.buildOptions('GET', `api/messages`);
+    reqOptions.qs = qs;
+
+    return cy.request(reqOptions).its('body');
   }
 
-  mailosaurCreateMessage(serverId, messageCreateOptions) {
-    return this.request.post(`api/messages?server=${serverId}`, messageCreateOptions);
+  mailosaurCreateMessage(serverId, options) {
+    return this.request.post(`api/messages?server=${serverId}`, options);
   }
 
-  mailosaurForwardMessage(messageId, messageForwardOptions) {
-    return this.request.post(`api/messages/${messageId}/forward`, messageForwardOptions);
+  mailosaurForwardMessage(messageId, options) {
+    return this.request.post(`api/messages/${messageId}/forward`, options);
   }
 
-  mailosaurReplyToMessage(messageId, messageReplyOptions) {
-    return this.request.post(`api/messages/${messageId}/reply`, messageReplyOptions);
+  mailosaurReplyToMessage(messageId, options) {
+    return this.request.post(`api/messages/${messageId}/reply`, options);
   }
 
   mailosaurGetMessage(server, criteria, options = {}) {
