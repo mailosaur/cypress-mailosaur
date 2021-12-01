@@ -31,7 +31,7 @@ declare global {
              */
             href?: string;
             /**
-             * The dispaly text of the link. This is particular useful for understanding how a
+             * The display text of the link. This is particular useful for understanding how a
              * link was displayed within HTML content.
              */
             text?: string;
@@ -70,7 +70,7 @@ declare global {
         }
 
         /**
-         * Describes a message attachmnent.
+         * Describes a message attachment.
          */
         interface Attachment {
             /**
@@ -271,7 +271,7 @@ declare global {
             body?: string;
             /**
              * If set to `ALL` (default), then only results that match all specified criteria will be returned.
-             * If set to `ANY`, results that match any of the specified criteria will be returned
+             * If set to `ANY`, results that match any of the specified criteria will be returned.
              */
             match?: "ALL" | "ANY";
         }
@@ -425,9 +425,9 @@ declare global {
              */
             itemsPerPage?: number,
             /**
-             * When using the 'get' method, this option can be used to prevent an error being thrown if no matching message is found in time.
+             * When using the 'mailosaurGetMessage' method, this option can be used to prevent an error being thrown if no matching message is found in time.
              */
-            suppressError?: boolean
+            errorOnTimeout?: boolean
         }
 
         /**
@@ -435,7 +435,7 @@ declare global {
          */
         interface SpamAssassinRule {
             /**
-             * Spam Assassin score.
+             * Spam Assassin rule score.
              */
             score?: number;
             /**
