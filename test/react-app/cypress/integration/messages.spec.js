@@ -78,6 +78,9 @@ const validateEmail = (email) => {
   // validateAttachments(email); Fails due to create
   // validateHtml(email);
   // validateText(email);
+  assert.isNull(email.metadata.ehlo);
+  assert.isNull(email.metadata.mailFrom);
+  assert.isNotEmpty(email.metadata.rcptTo, 'rcptTo is empty');
 };
 
 const validateEmailSummary = (email) => {

@@ -125,6 +125,25 @@ declare global {
              * Message headers
              */
             headers?: MessageHeader[];
+            /**
+             * The fully-qualified domain name or IP address that was provided with the
+             * Extended HELLO (EHLO) or HELLO (HELO) command. This value is generally
+             * used to identify the SMTP client.
+             * https://datatracker.ietf.org/doc/html/rfc5321#section-4.1.1.1
+             */
+            ehlo: string;
+            /**
+             * The source mailbox/email address, referred to as the 'reverse-path',
+             * provided via the MAIL command during the SMTP transaction.
+             * https://datatracker.ietf.org/doc/html/rfc5321#section-4.1.1.2
+             */
+            mailFrom?: string;
+            /**
+             * The recipient email addresses, each referred to as a 'forward-path',
+             * provided via the RCPT command during the SMTP transaction.
+             * https://datatracker.ietf.org/doc/html/rfc5321#section-4.1.1.3
+             */
+            rcptTo?: MessageAddress[];
         }
 
         /**
@@ -171,10 +190,6 @@ declare global {
              * An array of attachment metadata for any attached files.
              */
             attachments?: Attachment[];
-            /**
-             * The email recipient given to Mailosaur by the sending server.
-             */
-            rcpt?: MessageAddress[];
             /**
              * Further metadata related to the message, including email headers.
              */
@@ -227,10 +242,6 @@ declare global {
              * The number of attachments associated with the message.
              */
             attachments?: number;
-            /**
-             * The email recipient given to Mailosaur by the sending server.
-             */
-            rcpt?: MessageAddress[];
             /**
              * Identifier for the server in which the message is located.
              */
