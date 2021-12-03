@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm run test:ci
+      - run: npm i && npm run test:ci
 
   publish-npm:
     needs: build
