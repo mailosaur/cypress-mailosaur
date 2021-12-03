@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "4.0.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "cypress": "^9.1.0",
     "react-scripts": "^4.0.3",
     "serve": "^13.0.2",
