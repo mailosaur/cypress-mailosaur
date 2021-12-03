@@ -9,7 +9,7 @@ const store = createStore(
   combineReducers({
     dataProviders: storeManager.reducer,
   }),
-  window && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  window && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 );
 
 storeManager.setStore(store, 'dataProviders');

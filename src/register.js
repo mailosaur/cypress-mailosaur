@@ -5,7 +5,7 @@ const register = (Cypress) => {
   MailosaurCommands.cypressCommands.forEach((commandName) => {
     Cypress.Commands.add(
       commandName,
-      mailosaurCommands[commandName].bind(mailosaurCommands)
+      mailosaurCommands[commandName].bind(mailosaurCommands),
     );
   });
 };

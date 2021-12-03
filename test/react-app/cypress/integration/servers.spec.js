@@ -15,7 +15,7 @@ describe('Mailosaur server commands', () => {
 
     it('.mailosaurCreateServer should create a new server', (done) => {
       cy.mailosaurCreateServer({
-        name: serverName
+        name: serverName,
       }).then((server) => {
         createdServer = server;
         expect(createdServer.id).to.be.ok;

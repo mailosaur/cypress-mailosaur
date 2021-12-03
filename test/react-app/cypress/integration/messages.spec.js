@@ -1,36 +1,35 @@
 /* eslint-disable no-unused-expressions */
-
 /* eslint-disable no-unused-vars */ // TODO remove this line
 const isoDateString = new Date().toISOString().slice(0, 10);
 
 const validateHtml = (email) => {
   // Body
-  assert.match(email.html.body, /^<div dir="ltr">/, 'HTML body should match');
+  expect(email.html.body).to.match(/^<div dir="ltr">/, 'HTML body should match');
 
   // Links
-  assert.equal(email.html.links.length, 3, 'Should have HTML links');
-  assert.equal(email.html.links[0].href, 'https://mailosaur.com/', 'First link should have href');
-  assert.equal(email.html.links[0].text, 'mailosaur', 'First link should have text');
-  assert.equal(email.html.links[1].href, 'https://mailosaur.com/', 'Second link should have href');
-  assert.isUndefined(email.html.links[1].text, 'Second link should have no text');
-  assert.equal(email.html.links[2].href, 'http://invalid/', 'Third link should have href');
-  assert.equal(email.html.links[2].text, 'invalid', 'Third link should have text');
+  expect(email.html.links.length).to.equal(3, 'Should have HTML links');
+  expect(email.html.links[0].href).to.equal('https://mailosaur.com/', 'First link should have href');
+  expect(email.html.links[0].text).to.equal('mailosaur', 'First link should have text');
+  expect(email.html.links[1].href).to.equal('https://mailosaur.com/', 'Second link should have href');
+  expect(email.html.links[1].text).to.be.undefined;
+  expect(email.html.links[2].href).to.equal('http://invalid/', 'Third link should have href');
+  expect(email.html.links[2].text).to.equal('invalid', 'Third link should have text');
 
   // Images
-  assert.match(email.html.images[1].src, /cid:/);
-  assert.equal(email.html.images[1].alt, 'Inline image 1', 'Second image should have alt text');
+  expect(email.html.images[1].src).to.match(/cid:/);
+  expect(email.html.images[1].alt).to.equal('Inline image 1', 'Second image should have alt text');
 };
 
 const validateText = (email) => {
   // Body
-  assert.match(email.text.body, /^this is a test/);
+  expect(email.text.body).to.match(/^this is a test/);
 
   // Links
-  assert.equal(email.text.links.length, 2, 'Should have Text links');
-  assert.equal(email.text.links[0].href, 'https://mailosaur.com/', 'First link should have href');
-  assert.equal(email.text.links[0].text, email.text.links[0].href, 'First text link href & text should match');
-  assert.equal(email.text.links[1].href, 'https://mailosaur.com/', 'Second link should have href');
-  assert.equal(email.text.links[1].text, email.text.links[1].href, 'Second text link href & text should match');
+  expect(email.text.links.length).to.equal(2, 'Should have Text links');
+  expect(email.text.links[0].href).to.equal('https://mailosaur.com/', 'First link should have href');
+  expect(email.text.links[0].text).to.equal(email.text.links[0].href, 'First text link href & text should match');
+  expect(email.text.links[1].href).to.equal('https://mailosaur.com/', 'Second link should have href');
+  expect(email.text.links[1].text).to.equal(email.text.links[1].href, 'Second text link href & text should match');
 };
 
 const validateHeaders = (email) => {
@@ -38,39 +37,39 @@ const validateHeaders = (email) => {
   const expectedToHeader = `${email.to[0].name} <${email.to[0].email}>`;
   const { headers } = email.metadata;
 
-  assert.equal(headers.find(h => h.field.toLowerCase() === 'from').value, expectedFromHeader, 'From header should be accurate');
-  assert.equal(headers.find(h => h.field.toLowerCase() === 'to').value, expectedToHeader, 'To header should be accurate');
-  assert.equal(headers.find(h => h.field.toLowerCase() === 'subject').value, email.subject, 'Subject header should be accurate');
+  expect(headers.find((h) => h.field.toLowerCase() === 'from').value).to.equal(expectedFromHeader, 'From header should be accurate');
+  expect(headers.find((h) => h.field.toLowerCase() === 'to').value).to.equal(expectedToHeader, 'To header should be accurate');
+  expect(headers.find((h) => h.field.toLowerCase() === 'subject').value).to.equal(email.subject, 'Subject header should be accurate');
 };
 
 const validateMetadata = (email) => {
-  assert.equal(email.from.length, 1);
-  assert.equal(email.to.length, 1);
-  assert.isNotEmpty(email.from[0].email, 'Sent from email is empty');
-  // assert.isNotEmpty(email.from[0].name, 'Sent from name is empty'); TODO fails due to create
-  assert.isNotEmpty(email.to[0].email, 'Sent to email is empty');
-  // assert.isNotEmpty(email.to[0].name, 'Sent to name is empty'); TODO fails due to create
-  assert.isNotEmpty(email.subject, 'Subject is empty');
-  assert.isNotEmpty(email.server, 'Server is empty');
-  // assert.equal(email.received.toISOString().slice(0, 10), isoDateString); TODO fails due to create
+  expect(email.from.length).to.equal(1);
+  expect(email.to.length).to.equal(1);
+  expect(email.from[0].email).to.be.ok;
+  // expect(email.from[0].name).to.be.ok; TODO fails due to create
+  expect(email.to[0].email).to.be.ok;
+  // expect(email.to[0].name).to.be.ok; TODO fails due to create
+  expect(email.subject).to.be.ok;
+  expect(email.server).to.be.ok;
+  // expect(email.received.toISOString().slice(0, 10)).to.equal(isoDateString); TODO fails due to create
 };
 
 const validateAttachments = (email) => {
-  assert.equal(email.attachments.length, 2, 'Should have attachments');
+  expect(email.attachments.length).to.equal(2, 'Should have attachments');
 
   const file1 = email.attachments[0];
-  assert.isOk(file1.id, 'First attachment should have file id');
-  assert.isOk(file1.url);
-  assert.equal(file1.length, 82138, 'First attachment should be correct size');
-  assert.equal(file1.fileName, 'cat.png', 'First attachment should have filename');
-  assert.equal(file1.contentType, 'image/png', 'First attachment should have correct MIME type');
+  expect(file1.id).to.be.ok;
+  expect(file1.url).to.be.ok;
+  expect(file1.length).to.equal(82138, 'First attachment should be correct size');
+  expect(file1.fileName).to.equal('cat.png', 'First attachment should have filename');
+  expect(file1.contentType).to.equal('image/png', 'First attachment should have correct MIME type');
 
   const file2 = email.attachments[1];
-  assert.isOk(file2.id, 'Second attachment should have file id');
-  assert.isOk(file2.url);
-  assert.equal(file2.length, 212080, 'Second attachment should be correct size');
-  assert.equal(file2.fileName, 'dog.png', 'Second attachment should have filename');
-  assert.equal(file2.contentType, 'image/png', 'Second attachment should have correct MIME type');
+  expect(file2.id).to.be.ok;
+  expect(file2.url).to.be.ok;
+  expect(file2.length).to.equal(212080, 'Second attachment should be correct size');
+  expect(file2.fileName).to.equal('dog.png', 'Second attachment should have filename');
+  expect(file2.contentType).to.equal('image/png', 'Second attachment should have correct MIME type');
 };
 
 const validateEmail = (email) => {
@@ -78,15 +77,15 @@ const validateEmail = (email) => {
   // validateAttachments(email); Fails due to create
   // validateHtml(email);
   // validateText(email);
-  assert.isNull(email.metadata.ehlo);
-  assert.isNull(email.metadata.mailFrom);
-  assert.isNotEmpty(email.metadata.rcptTo, 'rcptTo is empty');
+  expect(email.metadata.ehlo).to.be.null;
+  expect(email.metadata.mailFrom).to.be.null;
+  expect(email.metadata.rcptTo).to.have.lengthOf(1);
 };
 
 const validateEmailSummary = (email) => {
   validateMetadata(email);
-  assert.isNotEmpty(email.summary);
-  // assert.equal(email.attachments, 2); Fails due to create
+  expect(email.summary).to.be;
+  // expect(email.attachments).to.equal(2); Fails due to create
 };
 
 describe('Mailosaur message commands', () => {
@@ -204,7 +203,7 @@ describe('Mailosaur message commands', () => {
       it('should return matching results', (done) => {
         const targetEmail = emails[1];
         cy.mailosaurSearchMessages(server, {
-          sentFrom: targetEmail.from[0].email
+          sentFrom: targetEmail.from[0].email,
         }).then((result) => {
           expect(result.items).to.have.lengthOf(5);
           expect(result.items[0].from[0].email).to.equal(targetEmail.from[0].email);
@@ -218,7 +217,7 @@ describe('Mailosaur message commands', () => {
       it('should return matching results', (done) => {
         const targetEmail = emails[1];
         cy.mailosaurSearchMessages(server, {
-          sentTo: targetEmail.to[0].email
+          sentTo: targetEmail.to[0].email,
         }).then((result) => {
           expect(result.items).to.have.lengthOf(5);
           expect(result.items[0].to[0].email).to.equal(targetEmail.to[0].email);
@@ -293,10 +292,10 @@ describe('Mailosaur message commands', () => {
 
       it('should return empty array if errors suppressed', (done) => {
         cy.mailosaurSearchMessages(server, {
-          sentTo: 'neverfound@example.com'
+          sentTo: 'neverfound@example.com',
         }, {
           timeout: 1,
-          errorOnTimeout: false
+          errorOnTimeout: false,
         }).then((result) => {
           expect(result.items).to.be.an('array').that.has.lengthOf(0);
           done();
@@ -333,7 +332,7 @@ describe('Mailosaur message commands', () => {
         to: `anything@${verifiedDomain}`,
         send: true,
         subject,
-        text: 'This is a new email'
+        text: 'This is a new email',
       }).then((message) => {
         expect(message.id).to.be.ok;
         expect(message.subject).to.equal(subject);
@@ -347,7 +346,7 @@ describe('Mailosaur message commands', () => {
         to: `anything@${verifiedDomain}`,
         send: true,
         subject,
-        html: '<p>This is a new email.</p>'
+        html: '<p>This is a new email.</p>',
       }).then((message) => {
         expect(message.id).to.be.ok;
         expect(message.subject).to.equal(subject);
@@ -358,11 +357,11 @@ describe('Mailosaur message commands', () => {
     it('should send with attachment', (done) => {
       const subject = 'New message with attachment';
 
-      cy.fixture('cat.png').then(fileContent => {
+      cy.fixture('cat.png').then((fileContent) => {
         const attachment = {
           fileName: 'cat.png',
           content: fileContent,
-          contentType: 'image/png'
+          contentType: 'image/png',
         };
 
         cy.mailosaurCreateMessage(server, {
@@ -370,15 +369,15 @@ describe('Mailosaur message commands', () => {
           send: true,
           subject,
           html: '<p>This is a new email.</p>',
-          attachments: [attachment]
+          attachments: [attachment],
         }).then((message) => {
-          assert.equal(message.attachments.length, 1, 'Should have attachment');
+          expect(message.attachments.length).to.be.equal(1, 'Should have attachment');
           const file1 = message.attachments[0];
-          assert.isOk(file1.id, 'First attachment should have file id');
-          assert.isOk(file1.url);
-          assert.equal(file1.length, 82138, 'First attachment should be correct size');
-          assert.equal(file1.fileName, 'cat.png', 'First attachment should have filename');
-          assert.equal(file1.contentType, 'image/png', 'First attachment should have correct MIME type');
+          expect(file1.id).to.be.ok;
+          expect(file1.url).to.be.ok;
+          expect(file1.length).to.be.equal(82138, 'First attachment should be correct size');
+          expect(file1.fileName).to.be.equal('cat.png', 'First attachment should have filename');
+          expect(file1.contentType).to.be.equal('image/png', 'First attachment should have correct MIME type');
           done();
         });
       });
@@ -391,7 +390,7 @@ describe('Mailosaur message commands', () => {
       const body = 'Forwarded message';
       cy.mailosaurForwardMessage(targetEmailId, {
         to: `anything@${verifiedDomain}`,
-        text: body
+        text: body,
       }).then((message) => {
         expect(message.id).to.be.ok;
         expect(message.text.body).to.contain(body);
@@ -404,7 +403,7 @@ describe('Mailosaur message commands', () => {
       const body = '<p>Forwarded <strong>HTML</strong> message.</p>';
       cy.mailosaurForwardMessage(targetEmailId, {
         to: `anything@${verifiedDomain}`,
-        html: body
+        html: body,
       }).then((message) => {
         expect(message.id).to.be.ok;
         expect(message.html.body).to.contain(body);
@@ -419,7 +418,7 @@ describe('Mailosaur message commands', () => {
       const targetEmailId = emails[0].id;
       const body = 'Reply message';
       cy.mailosaurReplyToMessage(targetEmailId, {
-        text: body
+        text: body,
       }).then((message) => {
         expect(message.id).to.be.ok;
         expect(message.text.body).to.contain(body);
@@ -431,7 +430,7 @@ describe('Mailosaur message commands', () => {
       const targetEmailId = emails[0].id;
       const body = '<p>Reply <strong>HTML</strong> message.</p>';
       cy.mailosaurReplyToMessage(targetEmailId, {
-        html: body
+        html: body,
       }).then((message) => {
         expect(message.id).to.be.ok;
         expect(message.html.body).to.contain(body);
@@ -443,24 +442,24 @@ describe('Mailosaur message commands', () => {
       const targetEmailId = emails[0].id;
       const body = '<p>Reply <strong>HTML</strong> message.</p>';
 
-      cy.fixture('cat.png').then(fileContent => {
+      cy.fixture('cat.png').then((fileContent) => {
         const attachment = {
           fileName: 'cat.png',
           content: fileContent,
-          contentType: 'image/png'
+          contentType: 'image/png',
         };
 
         cy.mailosaurReplyToMessage(targetEmailId, {
           html: body,
-          attachments: [attachment]
+          attachments: [attachment],
         }).then((message) => {
-          assert.equal(message.attachments.length, 1, 'Should have attachment');
+          expect(message.attachments.length).to.be.equal(1, 'Should have attachment');
           const file1 = message.attachments[0];
-          assert.isOk(file1.id, 'First attachment should have file id');
-          assert.isOk(file1.url);
-          assert.equal(file1.length, 82138, 'First attachment should be correct size');
-          assert.equal(file1.fileName, 'cat.png', 'First attachment should have filename');
-          assert.equal(file1.contentType, 'image/png', 'First attachment should have correct MIME type');
+          expect(file1.id).to.be.ok;
+          expect(file1.url).to.be.ok;
+          expect(file1.length).to.be.equal(82138, 'First attachment should be correct size');
+          expect(file1.fileName).to.be.equal('cat.png', 'First attachment should have filename');
+          expect(file1.contentType).to.be.equal('image/png', 'First attachment should have correct MIME type');
           done();
         });
       });

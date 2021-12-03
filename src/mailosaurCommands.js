@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+
 const Request = require('./request');
 
 class MailosaurCommands {
@@ -28,7 +30,7 @@ class MailosaurCommands {
       'mailosaurGetSpamAnalysis',
       'mailosaurGenerateEmailAddress',
       'mailosaurGetUsageLimits',
-      'mailosaurGetUsageTransactions'
+      'mailosaurGetUsageTransactions',
     ];
   }
 
@@ -42,11 +44,11 @@ class MailosaurCommands {
   }
 
   mailosaurListServers() {
-    return this.request.get(`api/servers`);
+    return this.request.get('api/servers');
   }
 
   mailosaurCreateServer(options) {
-    return this.request.post(`api/servers`, options);
+    return this.request.post('api/servers', options);
   }
 
   mailosaurGetServer(serverId) {
@@ -75,10 +77,10 @@ class MailosaurCommands {
       server: serverId,
       page: options.page,
       itemsPerPage: options.itemsPerPage,
-      receivedAfter: options.receivedAfter
+      receivedAfter: options.receivedAfter,
     };
 
-    const reqOptions = this.request.buildOptions('GET', `api/messages`);
+    const reqOptions = this.request.buildOptions('GET', 'api/messages');
     reqOptions.qs = qs;
 
     return cy.request(reqOptions).its('body');
@@ -125,7 +127,7 @@ class MailosaurCommands {
       server: serverId,
       page: options.page,
       itemsPerPage: options.itemsPerPage,
-      receivedAfter: options.receivedAfter
+      receivedAfter: options.receivedAfter,
     };
 
     if (!Number.isInteger(options.timeout)) {
@@ -137,7 +139,7 @@ class MailosaurCommands {
     }
 
     const fn = (resolve, reject) => () => {
-      const reqOptions = this.request.buildOptions('POST', `api/messages/search`);
+      const reqOptions = this.request.buildOptions('POST', 'api/messages/search');
       reqOptions.qs = qs;
       reqOptions.json = searchCriteria;
 
@@ -160,25 +162,25 @@ class MailosaurCommands {
           if (options.timeout && !body.items.length) {
             const delayPattern = (headers['x-ms-delay'] || '1000')
               .split(',')
-              .map(x => parseInt(x, 10));
+              .map((x) => parseInt(x, 10));
 
-            const delay = (pollCount >= delayPattern.length) ?
-              delayPattern[delayPattern.length - 1] :
-              delayPattern[pollCount];
+            const delay = (pollCount >= delayPattern.length)
+              ? delayPattern[delayPattern.length - 1]
+              : delayPattern[pollCount];
 
             pollCount += 1;
 
             // Stop if timeout will be exceeded
             if (((Date.now() - startTime) + delay) > options.timeout) {
-              return (options.errorOnTimeout === false) ?
-                resolve(body) :
-                reject(new Error('No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this).'));
+              return (options.errorOnTimeout === false)
+                ? resolve(body)
+                : reject(new Error('No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this).'));
             }
 
             return setTimeout(fn(resolve, reject), delay);
           }
 
-          resolve(body);
+          return resolve(body);
         });
     };
 
@@ -186,7 +188,7 @@ class MailosaurCommands {
       fn(resolve, reject)();
     }), {
       log: false,
-      timeout: options.timeout + 10000
+      timeout: options.timeout + 10000,
     });
   }
 
@@ -229,11 +231,11 @@ class MailosaurCommands {
   }
 
   mailosaurGetUsageLimits() {
-    return this.request.get(`api/usage/limits`);
+    return this.request.get('api/usage/limits');
   }
 
   mailosaurGetUsageTransactions() {
-    return this.request.get(`api/usage/transactions`);
+    return this.request.get('api/usage/transactions');
   }
 }
 

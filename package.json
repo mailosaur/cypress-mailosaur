@@ -23,6 +23,7 @@
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "lint": "node_modules/.bin/eslint src test/react-app/src test/react-app/cypress",
+    "lint:fix": "node_modules/.bin/eslint --fix src test/react-app/src test/react-app/cypress",
     "test": "npm run tsc && cd test/react-app && npm run test:ci",
     "test:ci": "cd test/react-app && npm i && npm run test:ci",
     "tsc": "node_modules/.bin/tsc src/mailosaurCommands.d.ts --types node"
@@ -31,12 +32,15 @@
     "cypress": ">= 2.1.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.16.3",
+    "@babel/preset-react": "^7.16.0",
     "@types/node": "^15.0.3",
     "babel-eslint": "10.1.0",
     "coveralls": "^3.1.1",
     "eslint": "^8.3.0",
-    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jest": "^25.3.0",
     "eslint-plugin-react": "^7.20.0",
     "jest": "^27.3.1",
     "sinon": "9.0.2",
@@ -55,8 +59,7 @@
     },
     "globals": {
       "Cypress": true,
-      "cy": true,
-      "assert": true
+      "cy": true
     },
     "rules": {
       "quotes": [

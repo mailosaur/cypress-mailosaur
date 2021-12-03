@@ -18,7 +18,7 @@ describe('Mailosaur usage commands', () => {
   });
 
   describe('.mailosaurGetUsageTransactions', () => {
-    it('should return account limits', (done) => {
+    it('should return usage transactions', (done) => {
       cy.mailosaurGetUsageTransactions().then((result) => {
         expect(result.items).to.have.lengthOf.at.least(2);
         expect(result.items[0].timestamp).to.be.ok;
