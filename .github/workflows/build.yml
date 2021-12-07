@@ -10,7 +10,9 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
-concurrency: cypress-mailosaur
+concurrency: 
+  group: cypress-mailosaur
+  cancel-in-progress: true
 
 jobs:
   build:
