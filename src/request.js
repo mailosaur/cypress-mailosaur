@@ -5,7 +5,8 @@ class Request {
   constructor(options) {
     this.baseUrl = options.baseUrl || 'https://mailosaur.com/';
     this.apiKey = options.apiKey;
-    const encodedKey = Buffer.from(`${this.apiKey}:`).toString('base64');
+    const b64 = btoa || ((str) => Buffer.from(str).toString('base64'));
+    const encodedKey = b64(`${this.apiKey}:`);
     this.headers = {
       Accept: 'application/json',
       Authorization: `Basic ${encodedKey}`,
