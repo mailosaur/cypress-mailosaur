@@ -15,6 +15,11 @@ const validateHtml = (email) => {
   expect(email.html.links[2].href).to.equal('http://invalid/', 'Third link should have href');
   expect(email.html.links[2].text).to.equal('invalid', 'Third link should have text');
 
+  // Codes
+  expect(email.html.codes.length).to.equal(2, 'Should have verification codes');
+  expect(email.html.codes[0].value).to.equal('123456');
+  expect(email.html.codes[1].value).to.equal('GHTY2');
+
   // Images
   expect(email.html.images[1].src).to.match(/cid:/);
   expect(email.html.images[1].alt).to.equal('Inline image 1', 'Second image should have alt text');
@@ -30,6 +35,11 @@ const validateText = (email) => {
   expect(email.text.links[0].text).to.equal(email.text.links[0].href, 'First text link href & text should match');
   expect(email.text.links[1].href).to.equal('https://mailosaur.com/', 'Second link should have href');
   expect(email.text.links[1].text).to.equal(email.text.links[1].href, 'Second text link href & text should match');
+
+  // Codes
+  expect(email.text.codes.length).to.equal(2, 'Should have verification codes');
+  expect(email.text.codes[0].value).to.equal('654321');
+  expect(email.text.codes[1].value).to.equal('GSD2A');
 };
 
 const validateHeaders = (email) => {
