@@ -176,7 +176,7 @@ describe('Mailosaur message commands', () => {
     it('should return matching results', (done) => {
       const targetEmail = emails[1];
       cy.mailosaurGetMessagesBySentFrom(server, targetEmail.from[0].email).then((result) => {
-        expect(result.items).to.have.lengthOf(5);
+        expect(result.items).to.have.lengthOf(1);
         expect(result.items[0].from[0].email).to.equal(targetEmail.from[0].email);
         expect(result.items[0].subject).to.equal(targetEmail.subject);
         done();
@@ -215,7 +215,7 @@ describe('Mailosaur message commands', () => {
         cy.mailosaurSearchMessages(server, {
           sentFrom: targetEmail.from[0].email,
         }).then((result) => {
-          expect(result.items).to.have.lengthOf(5);
+          expect(result.items).to.have.lengthOf(1);
           expect(result.items[0].from[0].email).to.equal(targetEmail.from[0].email);
           expect(result.items[0].subject).to.equal(targetEmail.subject);
           done();
