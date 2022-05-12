@@ -31,6 +31,10 @@ class MailosaurCommands {
       'mailosaurGenerateEmailAddress',
       'mailosaurGetUsageLimits',
       'mailosaurGetUsageTransactions',
+      'mailosaurListDevices',
+      'mailosaurCreateDevice',
+      'mailosaurGetDeviceOtp',
+      'mailosaurDeleteDevice',
     ];
   }
 
@@ -236,6 +240,28 @@ class MailosaurCommands {
 
   mailosaurGetUsageTransactions() {
     return this.request.get('api/usage/transactions');
+  }
+
+  mailosaurListDevices() {
+    return this.request.get('api/devices');
+  }
+
+  mailosaurCreateDevice(options) {
+    return this.request.post('api/devices', options);
+  }
+
+  mailosaurGetDeviceOtp(query) {
+    if (!query || query.indexOf('-') > -1) {
+      return this.request.get(`api/devices/${query}/otp`);
+    }
+
+    return this.request.post('api/devices/otp', {
+      sharedSecret: query,
+    });
+  }
+
+  mailosaurDeleteDevice(deviceId) {
+    return this.request.del(`api/devices/${deviceId}`);
   }
 }
 

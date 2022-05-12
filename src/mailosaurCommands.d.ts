@@ -557,6 +557,58 @@ export interface UsageTransactionListResult {
     items?: UsageTransaction[];
 }
 
+/**
+ * Mailosaur virtual security device.
+ */
+export interface Device {
+    /**
+     * Unique identifier for the device.
+     */
+    id?: string;
+    /**
+     * The name of the device.
+     */
+    name?: string;
+}
+
+/**
+ * Options used to create a new Mailosaur virtual security device.
+ */
+export interface DeviceCreateOptions {
+    /**
+     * A name used to identify the device.
+     */
+    name?: string;
+    /**
+     * The base32-encoded shared secret for this device.
+     */
+    sharedSecret?: string;
+}
+
+/**
+ * The result of the device listing operation.
+ */
+export interface DeviceListResult {
+    /**
+     * The individual devices forming the result.
+     */
+    items?: Device[];
+}
+
+/**
+ * Mailosaur virtual security device OTP result.
+ */
+export interface OtpResult {
+    /**
+     * The current one-time password.
+     */
+    code?: string;
+    /**
+     * The expiry date/time of the current one-time password.
+     */
+    expires?: Date;
+}
+
 declare global {
     namespace Cypress {
         interface Chainable {
@@ -856,6 +908,42 @@ declare global {
              */
             mailosaurGetUsageTransactions(
             ): Cypress.Chainable<UsageTransactionListResult>;
+
+            /**
+             * Returns a list of your virtual security devices.
+             */
+            mailosaurListDevices(
+            ): Cypress.Chainable<DeviceListResult>;
+
+            /**
+             * Creates a new virtual security device.
+             */
+            mailosaurCreateDevice(
+                /**
+                 * Options used to create a new Mailosaur virtual security device.
+                 */
+                options: DeviceCreateOptions
+            ): Cypress.Chainable<Device>;
+
+            /**
+             * Retrieves the current one-time password for a saved device, or given base32-encoded shared secret.
+             */
+            mailosaurGetDeviceOtp(
+                /**
+                 * Either the unique identifier of the device, or a base32-encoded shared secret.
+                 */
+                query: string
+            ): Cypress.Chainable<OtpResult>;
+
+            /**
+             * Permanently delete a device. This operation cannot be undone.
+             */
+            mailosaurDeleteDevice(
+                /**
+                 * The unique identifier of the device.
+                 */
+                deviceId: string
+            ): Cypress.Chainable<null>;
         }
     }
 }
