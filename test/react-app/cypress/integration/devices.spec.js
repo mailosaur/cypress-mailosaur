@@ -26,15 +26,15 @@ describe('Mailosaur device commands', () => {
   });
 
   it('.mailosaurDeleteDevice should delete an existing device', (done) => {
-    cy.mailosaurListDevices().then((result) => {
-      expect(result.items).to.have.lengthOf(1);
+    cy.mailosaurListDevices().then((before) => {
+      expect(before.items).to.deep.include.members([createdDevice]);
     }).then(() => (
       cy.mailosaurDeleteDevice(createdDevice.id)
     )).then(() => (
       cy.mailosaurListDevices()
     ))
-      .then((result) => {
-        expect(result.items).to.have.lengthOf(0);
+      .then((after) => {
+        expect(after.items).to.not.deep.include.members([createdDevice]);
         done();
       });
   });
