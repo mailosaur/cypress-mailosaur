@@ -27,7 +27,7 @@ Install the Mailosaur commands via `npm`:
 npm install cypress-mailosaur --save-dev
 ```
 
-Once downloaded, add the following line to `cypress/support/index.js` to import the commands into your Cypress project:
+Once downloaded, add the following line to `cypress/support/e2e.js` (or `cypress/support/index.js` in older versions of Cypress) to import the commands into your Cypress project:
 
 ```js
 require('cypress-mailosaur');
@@ -37,27 +37,20 @@ require('cypress-mailosaur');
 
 Mailosaur commands need your Mailosaur API key to work. You can learn about [managing API keys here](https://mailosaur.com/docs/managing-your-account/api-keys/).
 
-#### Option 1: Add API key to `cypress.json` 
+#### Add API key to `cypress.config.js` 
+
+```js
+module.exports = defineConfig({
+  env: {
+    MAILOSAUR_API_KEY: "your-key-here",
+  },
+
+  // ...
+});
 
 ```
-{  
-  "env": {
-    "MAILOSAUR_API_KEY": "your-key-here"
-  }
-}
-```
 
-#### Option 2: Add API key to a `cypress.env.json` file
-
-You can create your own `cypress.env.json` file that Cypress will automatically check. This is useful because if you add `cypress.env.json` to your `.gitignore` file, the values in here can be different for each developer machine.
-
-```
-{  
-  "MAILOSAUR_API_KEY": "your-key-here"
-}
-```
-
-#### Option 3: Set API key via a system environment variable
+#### Alternatively, set API key via a system environment variable
 
 To set the environment variable on your machine, it needs to be prefixed with either `CYPRESS_` or `cypress_`.
 
@@ -72,7 +65,7 @@ For this example, we'll navigate to a password reset page, request a new passwor
 Create a new test spec:
 
 ```sh
-touch cypress/integration/password-reset.spec.js
+touch cypress/e2e/password-reset.cy.js
 ```
 
 Now edit the file to something like this:
