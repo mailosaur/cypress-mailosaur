@@ -22,7 +22,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        node-version: ['lts']
+        node-version: ['lts/*']
 
     env:
       CYPRESS_MAILOSAUR_BASE_URL: https://mailosaur.com/
@@ -33,7 +33,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm i && npm run test:ci
@@ -55,7 +55,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        node-version: ['lts']
+        node-version: ['lts/*']
 
     env:
       CYPRESS_MAILOSAUR_BASE_URL: https://next.mailosaur.com/
