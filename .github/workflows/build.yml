@@ -22,7 +22,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        node-version: lts/*
+        node-version: ['lts/*']
 
     env:
       CYPRESS_MAILOSAUR_BASE_URL: https://mailosaur.com/
@@ -55,7 +55,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        node-version: lts/*
+        node-version: ['lts/*']
 
     env:
       CYPRESS_MAILOSAUR_BASE_URL: https://next.mailosaur.com/
