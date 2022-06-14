@@ -51,7 +51,7 @@ class MailosaurCommands {
     return this.request.get('api/servers');
   }
 
-  mailosaurCreateServer(options) {
+  mailosaurCreateServer(options = {}) {
     return this.request.post('api/servers', options);
   }
 
@@ -64,7 +64,7 @@ class MailosaurCommands {
       .then((result) => (result.value));
   }
 
-  mailosaurUpdateServer(server) {
+  mailosaurUpdateServer(server = {}) {
     return this.request.put(`api/servers/${server.id}`, server);
   }
 
@@ -84,25 +84,22 @@ class MailosaurCommands {
       receivedAfter: options.receivedAfter,
     };
 
-    const reqOptions = this.request.buildOptions('GET', 'api/messages');
-    reqOptions.qs = qs;
-
-    return cy.request(reqOptions).its('body');
+    return this.request.get('api/messages', { qs });
   }
 
-  mailosaurCreateMessage(serverId, options) {
+  mailosaurCreateMessage(serverId, options = {}) {
     return this.request.post(`api/messages?server=${serverId}`, options);
   }
 
-  mailosaurForwardMessage(messageId, options) {
+  mailosaurForwardMessage(messageId, options = {}) {
     return this.request.post(`api/messages/${messageId}/forward`, options);
   }
 
-  mailosaurReplyToMessage(messageId, options) {
+  mailosaurReplyToMessage(messageId, options = {}) {
     return this.request.post(`api/messages/${messageId}/reply`, options);
   }
 
-  mailosaurGetMessage(server, criteria, options = {}) {
+  mailosaurGetMessage(server, criteria = {}, options = {}) {
     // Only return 1 result
     options.page = 0; // eslint-disable-line no-param-reassign
     options.itemsPerPage = 1; // eslint-disable-line no-param-reassign
@@ -123,7 +120,7 @@ class MailosaurCommands {
     return this.request.get(`api/messages/${messageId}`);
   }
 
-  mailosaurSearchMessages(serverId, searchCriteria, options = {}) {
+  mailosaurSearchMessages(serverId, searchCriteria = {}, options = {}) {
     let pollCount = 0;
     const startTime = Date.now();
 
@@ -149,19 +146,9 @@ class MailosaurCommands {
 
       return Cypress.backend('http:request', reqOptions)
         .timeout(10000)
+        .then(this.request.getResponseHandler(true))
         .then((result) => {
-          const { body, status, headers } = result;
-
-          switch (status) {
-            case 200:
-              break;
-            case 400:
-              return reject(new Error(JSON.stringify(result.body)));
-            case 401:
-              return reject(new Error('Cannot authenticate with Mailosaur (401). Please check your API key.'));
-            default:
-              return reject(new Error(`Status: ${status}, Result: ${JSON.stringify(result)}`));
-          }
+          const { body, headers } = result;
 
           if (options.timeout && !body.items.length) {
             const delayPattern = (headers['x-ms-delay'] || '1000')
