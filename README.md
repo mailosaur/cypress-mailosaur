@@ -21,10 +21,12 @@ Follow these steps to start testing email with Cypress:
 
 ### Step 1 - Installation
 
-Install the Mailosaur commands via `npm`:
+Install the Mailosaur commands via `npm` or `yarn`:
 
 ```sh
-npm install cypress-mailosaur --save-dev
+npm i -D cypress-mailosaur
+# or
+yarn add -D cypress-mailosaur
 ```
 
 Once downloaded, add the following line to `cypress/support/e2e.js` (or `cypress/support/index.js` in older versions of Cypress) to import the commands into your Cypress project:
