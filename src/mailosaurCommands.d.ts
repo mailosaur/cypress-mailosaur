@@ -724,7 +724,7 @@ declare global {
             /**
              * Sends a reply to the specified message. This is useful for when simulating a user replying to one of your email or SMS messages.
              */
-            mailosaurReplyMessage(
+            mailosaurReplyToMessage(
                 /**
                  * The unique identifier of the message to be forwarded.
                  */
