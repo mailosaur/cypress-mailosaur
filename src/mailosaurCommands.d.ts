@@ -852,7 +852,7 @@ declare global {
                  * The identifier for the required attachment.
                  */
                 attachmentId: string
-            ): Cypress.Chainable<Attachment>;
+            ): Cypress.Chainable<unknown>;
 
             /**
              * Downloads an EML file representing the specified email.

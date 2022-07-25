@@ -200,7 +200,7 @@ class MailosaurCommands {
   }
 
   mailosaurDownloadAttachment(attachmentId) {
-    return this.request.get(`api/files/attachments/${attachmentId}`);
+    return this.request.get(`api/files/attachments/${attachmentId}`, { encoding: 'binary' });
   }
 
   mailosaurDownloadMessage(messageId) {
