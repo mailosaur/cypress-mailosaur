@@ -324,6 +324,10 @@ export interface MessageCreateOptions {
      */
     to?: string;
     /**
+     * Allows for the partial override of the message's 'from' address. This **must** be an address ending with `YOUR_SERVER.mailosaur.net`, such as `my-emails@a1bcdef2.mailosaur.net`.
+     */
+    from?: string;
+    /**
      * If true, email will be sent upon creation.
      */
     send?: boolean;
