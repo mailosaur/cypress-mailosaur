@@ -165,6 +165,10 @@ export interface Message {
      */
     id?: string;
     /**
+     * The type of message.
+     */
+    type: 'Email' | 'SMS';
+    /**
      * The sender of the message.
      */
     from?: MessageAddress[];
@@ -220,6 +224,10 @@ export interface MessageSummary {
      * Unique identifier for the message.
      */
     id: string;
+    /**
+     * The type of message.
+     */
+    type: 'Email' | 'SMS';
     /**
      * The sender of the message.
      */

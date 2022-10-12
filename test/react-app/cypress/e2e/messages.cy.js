@@ -53,6 +53,7 @@ const validateHeaders = (email) => {
 };
 
 const validateMetadata = (email) => {
+  expect(email.type).to.equal('Email');
   expect(email.from.length).to.equal(1);
   expect(email.to.length).to.equal(1);
   expect(email.from[0].email).to.be.ok;
