@@ -321,6 +321,10 @@ export interface MessageListOptions {
      * A limit on the number of results to be returned. This can be set between `1` and `1000`, with the default being `50`.
      */
     itemsPerPage?: number
+    /**
+     * Optionally limits results based on the direction (`Sent` or `Received`), with the default being `Received`.
+     */
+    dir?: string
 }
 
 /**
@@ -461,6 +465,10 @@ export interface SearchOptions {
      * When using the 'mailosaurGetMessage' method, this option can be used to prevent an error being thrown if no matching message is found in time.
      */
     errorOnTimeout?: boolean
+    /**
+     * Optionally limits results based on the direction (`Sent` or `Received`), with the default being `Received`.
+     */
+    dir?: string
 }
 
 /**

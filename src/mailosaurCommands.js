@@ -82,6 +82,7 @@ class MailosaurCommands {
       page: options.page,
       itemsPerPage: options.itemsPerPage,
       receivedAfter: options.receivedAfter,
+      dir: options.dir,
     };
 
     return this.request.get('api/messages', { qs });
@@ -129,6 +130,7 @@ class MailosaurCommands {
       page: options.page,
       itemsPerPage: options.itemsPerPage,
       receivedAfter: options.receivedAfter,
+      dir: options.dir,
     };
 
     if (!Number.isInteger(options.timeout)) {
