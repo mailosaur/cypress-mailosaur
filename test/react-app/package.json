@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@data-provider/browser-storage": "2.0.3",
-    "@data-provider/core": "2.1.2",
-    "@data-provider/react": "1.0.2",
-    "prop-types": "15.7.2",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-redux": "7.2.0",
-    "redux": "4.0.5"
+    "@data-provider/browser-storage": "4.0.0",
+    "@data-provider/core": "4.0.0",
+    "@data-provider/react": "2.0.0",
+    "prop-types": "15.8.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-redux": "8.0.5",
+    "redux": "4.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -37,11 +37,11 @@
     ]
   },
   "devDependencies": {
-    "babel-plugin-module-resolver": "4.0.0",
-    "cypress": "^10.1.0",
+    "babel-plugin-module-resolver": "4.1.0",
+    "cypress": "^10.11.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "react-scripts": "^4.0.3",
-    "serve": "^13.0.2",
+    "react-scripts": "^5.0.1",
+    "serve": "^14.1.0",
     "start-server-and-test": "^1.14.0"
   }
 }
