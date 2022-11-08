@@ -40,7 +40,7 @@
     "babel-plugin-module-resolver": "4.0.0",
     "cypress": "^10.1.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "^5.0.1",
     "serve": "^13.0.2",
     "start-server-and-test": "^1.14.0"
   }
