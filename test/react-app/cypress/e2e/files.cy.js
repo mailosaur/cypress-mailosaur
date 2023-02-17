@@ -7,12 +7,11 @@ describe('Mailosaur files commands', () => {
     throw new Error('You must set the MAILOSAUR_SERVER environment variable to run these tests.');
   }
 
-  before((done) => {
+  before(() => {
     cy.mailosaurDeleteAllMessages(server)
       .mailosaurCreateMessage(server, {})
       .then((result) => {
         email = result;
-        done();
       });
   });
 

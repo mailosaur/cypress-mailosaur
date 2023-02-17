@@ -108,7 +108,7 @@ describe('Mailosaur message commands', () => {
     throw new Error('You must set the MAILOSAUR_SERVER environment variable to run these tests.');
   }
 
-  before((done) => {
+  before(() => {
     cy.mailosaurDeleteAllMessages(server)
       .mailosaurCreateMessage(server, {})
       .mailosaurCreateMessage(server, {})
@@ -118,7 +118,6 @@ describe('Mailosaur message commands', () => {
       .mailosaurListMessages(server)
       .then((result) => {
         emails = result.items;
-        done();
       });
   });
 
