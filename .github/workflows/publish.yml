@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
+          node-version: '18.13.0' # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
       - run: npm i && npm run test:ci
 
   publish-npm:
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
+          node-version: '18.13.0' # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
           registry-url: https://registry.npmjs.org/
       - name: version
         run: |
