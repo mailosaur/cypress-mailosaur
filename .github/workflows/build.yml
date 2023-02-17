@@ -19,11 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-    strategy:
-      max-parallel: 1
-      matrix:
-        node-version: '18.13.0' # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
-
     env:
       CYPRESS_MAILOSAUR_BASE_URL: https://mailosaur.com/
       CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
@@ -32,10 +27,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
     - run: npm i && npm run test:ci
     - name: Notify on Failure
       uses: skitionek/notify-microsoft-teams@master
@@ -52,11 +47,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-    strategy:
-      max-parallel: 1
-      matrix:
-        node-version: '18.13.0' # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
-
     env:
       CYPRESS_MAILOSAUR_BASE_URL: https://next.mailosaur.com/
       CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
@@ -65,10 +55,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
     - run: npm i && npm run test:ci
     - name: Notify on Failure
       uses: skitionek/notify-microsoft-teams@master
