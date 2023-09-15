@@ -25,7 +25,7 @@ describe('Mailosaur previews commands', () => {
           return cy.mailosaurDownloadPreview(result.items[0].id);
         })
         .then(file => {
-          expect(file).to.be.ok();
+          expect(file).to.be.ok;
         });
     });
   });
