@@ -35,6 +35,9 @@ class MailosaurCommands {
       'mailosaurCreateDevice',
       'mailosaurGetDeviceOtp',
       'mailosaurDeleteDevice',
+      'mailosaurListPreviewEmailClients',
+      'mailosaurGenerateEmailPreviews',
+      'mailosaurDownloadPreview',
     ];
   }
 
@@ -251,6 +254,18 @@ class MailosaurCommands {
 
   mailosaurDeleteDevice(deviceId) {
     return this.request.del(`api/devices/${deviceId}`);
+  }
+
+  mailosaurListPreviewEmailClients() {
+    return this.request.get('api/previews/clients');
+  }
+
+  mailosaurGenerateEmailPreviews(messageId, options = {}) {
+    return this.request.post(`api/messages/${messageId}/previews`, options);
+  }
+
+  mailosaurDownloadPreview(previewId) {
+    return this.request.get(`api/files/previews/${previewId}`, { encoding: 'binary' });
   }
 }
 
