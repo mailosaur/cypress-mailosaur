@@ -170,7 +170,7 @@ class MailosaurCommands {
             if (((Date.now() - startTime) + delay) > options.timeout) {
               return (options.errorOnTimeout === false)
                 ? resolve(body)
-                : reject(new Error('No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this).'));
+                : reject(new Error(`No matching messages found in time. By default, only messages received in the last hour are checked (use receivedAfter to override this). The search criteria used for this query was [${JSON.stringify(searchCriteria)}] which timed out after ${options.timeout}ms`));
             }
 
             return setTimeout(fn(resolve, reject), delay);
