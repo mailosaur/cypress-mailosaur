@@ -28,6 +28,7 @@ class MailosaurCommands {
       'mailosaurDownloadAttachment',
       'mailosaurDownloadMessage',
       'mailosaurGetSpamAnalysis',
+      'mailosaurGetDeliverabilityReport',
       'mailosaurGenerateEmailAddress',
       'mailosaurGetUsageLimits',
       'mailosaurGetUsageTransactions',
@@ -218,6 +219,10 @@ class MailosaurCommands {
 
   mailosaurGetSpamAnalysis(messageId) {
     return this.request.get(`api/analysis/spam/${messageId}`);
+  }
+
+  mailosaurGetDeliverabilityReport(messageId) {
+    return this.request.get(`api/analysis/deliverability/${messageId}`);
   }
 
   mailosaurGenerateEmailAddress(serverId) {

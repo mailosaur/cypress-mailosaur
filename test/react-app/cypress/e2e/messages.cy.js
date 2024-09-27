@@ -1,4 +1,7 @@
 /* eslint-disable no-unused-expressions */
+
+const exp = require("constants");
+
 /* eslint-disable no-unused-vars */ // TODO remove this line
 const isoDateString = new Date().toISOString().slice(0, 10);
 
@@ -319,6 +322,53 @@ describe('Mailosaur message commands', () => {
       const targetId = emails[0].id;
       cy.mailosaurGetSpamAnalysis(targetId).then((result) => {
         result.spamFilterResults.spamAssassin.forEach((rule) => {
+          expect(rule.score).to.be.a('number');
+          expect(rule.rule).to.be.ok;
+          expect(rule.description).to.be.ok;
+        });
+        done();
+      });
+    });
+  });
+  
+  describe('.mailosaurGetDeliverabilityReport', () => {
+    it('should perform a deliverability report on an email', (done) => {
+      const targetId = emails[0].id;
+      cy.mailosaurGetDeliverabilityReport(targetId).then((result) => {
+
+        expect(result).to.be.ok;
+
+        result.dkim.forEach((dkim) => {
+          expect(dkim.result).to.be.ok;
+          expect(dkim.tags).to.be.ok;
+        });
+
+        expect(result.dmarc).to.be.ok;
+        expect(result.dmarc.result).to.be.ok;
+        expect(result.dmarc.tags).to.be.ok;
+
+        expect(result.blockLists).to.be.ok;
+        result.blockLists.forEach((blockList) => {
+          expect(blockList.result).to.be.ok;
+          expect(blockList.id).to.be.ok;
+          expect(blockList.name).to.be.ok;
+        });
+
+        expect(result.content).to.be.ok;
+        expect(result.content.embed).to.be.a('boolean');
+        expect(result.content.iframe).to.be.a('boolean');
+        expect(result.content.object).to.be.a('boolean');
+        expect(result.content.script).to.be.a('boolean');
+        expect(result.content.shortUrls).to.be.a('boolean');
+        expect(result.content.totalSize).to.be.ok;
+        expect(result.content.textSize).to.be.ok;
+        expect(result.content.missingAlt).to.be.a('boolean');
+        expect(result.content.missingListUnsubscribe).to.be.a('boolean');
+
+        expect(result.dnsRecords).to.be.ok;
+
+        expect(result.spamAssassin).to.be.ok;
+        result.spamAssassin.rules.forEach((rule) => {
           expect(rule.score).to.be.a('number');
           expect(rule.rule).to.be.ok;
           expect(rule.description).to.be.ok;
