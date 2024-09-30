@@ -1,7 +1,4 @@
 /* eslint-disable no-unused-expressions */
-
-const exp = require("constants");
-
 /* eslint-disable no-unused-vars */ // TODO remove this line
 const isoDateString = new Date().toISOString().slice(0, 10);
 
