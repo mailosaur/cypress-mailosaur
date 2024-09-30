@@ -327,6 +327,53 @@ describe('Mailosaur message commands', () => {
       });
     });
   });
+  
+  describe('.mailosaurGetDeliverabilityReport', () => {
+    it('should perform a deliverability report on an email', (done) => {
+      const targetId = emails[0].id;
+      cy.mailosaurGetDeliverabilityReport(targetId).then((result) => {
+
+        expect(result).to.be.ok;
+
+        result.dkim.forEach((dkim) => {
+          expect(dkim.result).to.be.ok;
+          expect(dkim.tags).to.be.ok;
+        });
+
+        expect(result.dmarc).to.be.ok;
+        expect(result.dmarc.result).to.be.ok;
+        expect(result.dmarc.tags).to.be.ok;
+
+        expect(result.blockLists).to.be.ok;
+        result.blockLists.forEach((blockList) => {
+          expect(blockList.result).to.be.ok;
+          expect(blockList.id).to.be.ok;
+          expect(blockList.name).to.be.ok;
+        });
+
+        expect(result.content).to.be.ok;
+        expect(result.content.embed).to.be.a('boolean');
+        expect(result.content.iframe).to.be.a('boolean');
+        expect(result.content.object).to.be.a('boolean');
+        expect(result.content.script).to.be.a('boolean');
+        expect(result.content.shortUrls).to.be.a('boolean');
+        expect(result.content.totalSize).to.be.ok;
+        expect(result.content.textSize).to.be.ok;
+        expect(result.content.missingAlt).to.be.a('boolean');
+        expect(result.content.missingListUnsubscribe).to.be.a('boolean');
+
+        expect(result.dnsRecords).to.be.ok;
+
+        expect(result.spamAssassin).to.be.ok;
+        result.spamAssassin.rules.forEach((rule) => {
+          expect(rule.score).to.be.a('number');
+          expect(rule.rule).to.be.ok;
+          expect(rule.description).to.be.ok;
+        });
+        done();
+      });
+    });
+  });
 
   describe('.mailosaurDeleteMessage', () => {
     it('should delete an email', (done) => {

@@ -514,6 +514,180 @@ export interface SpamAnalysisResult {
 }
 
 /**
+ * The results of deliverability report performed by Mailosaur.
+ */
+export interface DeliverabilityReport {
+    /**
+     * The result of checking for SPF issues
+     */
+    spf?: EmailAuthenticationResult;
+    /**
+     * The result of checking for DKIM issues
+     */
+    dkim?: EmailAuthenticationResult[];
+    /**
+     * The result of checking for DMARC issues
+     */
+    dmarc?: EmailAuthenticationResult;
+    /**
+     * The result of each blocklist that was checked
+     */
+    blockLists?: BlockListResult[];
+    /**
+     * The result of content checks made on the email
+     */
+    content?: Content;
+    /**
+     * The DNS records checks made against the sender's domain
+     */
+    dnsRecords?: DnsRecords;
+    /**
+     * The result of spam analysis performed by Mailosaur 
+     */
+    spamAssassin?: SpamAssassinResult;
+}
+
+/**
+ * The result of an email domain check
+ */
+export interface EmailAuthenticationResult {
+    /**
+     * The result of the check
+     */
+    result?: ResultEnum;
+    /**
+     * A description of any issue/notes found
+     */
+    description?: string;
+    /**
+     * The raw values returned from the check
+     */
+    rawValue?: string;
+    /** 
+     * The seperated tags returned from the check
+    */
+    tags?: { [key: string]: string};
+}
+
+/**
+ * The result of an domain check against a blocklist checker
+ */
+export interface BlockListResult{
+    /**
+     * The identifier of the blocklist
+     */
+    id: string;
+    /**
+     * The name of the blocklist
+     */
+    name: string;
+    /**
+     * The result of the blocklist check
+     */
+    result: ResultEnum;
+}
+
+/**
+ * The results of email content analysis
+ */
+export interface Content{
+    /**
+     * The content contained embed tags
+     */
+    embed: boolean;
+    /**
+     * The content contained Iframe tags
+     */
+    iframe: boolean;
+    /**
+     * The content contained object tags
+     */
+    object: boolean;
+    /**
+     * The content contained script tags
+     */
+    script: boolean;
+    /**
+     * The content contained URL's that have been shortened
+     */
+    shortUrls: boolean;
+    /**
+     * The length of all text that the content contained
+     */
+    textSize: number;
+    /**
+     * The length of all HTML that the content contained
+     */
+    totalSize: number;
+    /**
+     * Image(s) were missing "alt" properties
+     */
+    missingAlt: boolean;
+    /**
+     * The message is missing a "List-Unsubscribe" header
+     */
+    missingListUnsubscribe: boolean;
+}
+
+/**
+ * The records found when checking DNS records of an email sender's domain
+ */
+export interface DnsRecords{
+    /**
+     * The A Records of the sender's domain
+     */
+    a?: string[];
+    /**
+     * The MX Records of the sender's domain
+     */
+    mx?: string[];
+    /**
+     * The PTR Record of the sender's domain
+     */
+    ptr?: string[];
+}
+
+/**
+ * The results of spam assassin check performed by Mailosaur.
+ */
+export interface SpamAssassinResult{
+    /**
+     * Overall Mailosaur spam score.
+     */
+    score: number;
+    /**
+     * The result of the spam check
+     */
+    result: ResultEnum;
+    /**
+     * Spam Assassin filter rules.
+     */
+    rules: SpamAssassinRule[];
+}
+
+/**
+ * The result of a deliverability check
+ */
+export enum ResultEnum {
+    /**
+     * The check had a positive result
+     */
+    Pass,
+    /**
+     * The check was acceptable but could be improved
+     */
+    Warning,
+    /**
+     * The check had a negative result
+     */
+    Fail,
+    /**
+     * The check was inconclusive due to a timeout
+     */
+    Timeout
+}
+
+/**
  * The detail of an individual account limit.
  */
 export interface UsageAccountLimit {
@@ -1023,7 +1197,17 @@ declare global {
                  * The identifier of the message to be analyzed.
                  */
                 messageId: string
-            ): Chainable<SpamAnalysisResult>;
+            ): Cypress.Chainable<SpamAnalysisResult>;
+
+            /**
+             * Perform a deliverability report of an email.
+             */
+            mailosaurGetDeliverabilityReport(
+                /**
+                 * The identifier of the message to be analyzed.
+                 */
+                messageId: string
+            ): Cypress.Chainable<DeliverabilityReport>;
 
             /**
              * Generates a random email address by appending a random string in front of the server's
