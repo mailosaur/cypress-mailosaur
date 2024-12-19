@@ -90,7 +90,7 @@ const validateEmail = (email) => {
   // validateText(email);
   expect(email.metadata.ehlo).to.be.null;
   expect(email.metadata.mailFrom).to.be.null;
-  expect(email.metadata.rcptTo).to.have.lengthOf(1);
+  expect(email.to).to.have.lengthOf(1);
 };
 
 const validateEmailSummary = (email) => {
@@ -411,6 +411,24 @@ describe('Mailosaur message commands', () => {
       });
     });
 
+    it('should send with HTML content to a CC recipient', (done) => {
+      const subject = 'CC Message';
+      const ccRecipient = `someoneelse@${verifiedDomain}`;
+      cy.mailosaurCreateMessage(server, {
+        to: `anything@${verifiedDomain}`,
+        cc: ccRecipient,
+        send: true,
+        subject,
+        html: '<p>This is a new email with a CC recipient.</p>',
+      }).then((message) => {
+        expect(message.id).to.be.ok;
+        expect(message.subject).to.equal(subject);
+        expect(message.cc.length).to.equal(1);
+        expect(message.cc[0].email).to.equal(ccRecipient);
+        done();
+      });
+    });
+
     it('should send with attachment', (done) => {
       const subject = 'New message with attachment';
 
@@ -467,6 +485,23 @@ describe('Mailosaur message commands', () => {
         done();
       });
     });
+
+    it('should forward with HTML content to a CC recipient', (done) => {
+      const targetEmailId = emails[0].id;
+      const body = '<p>Forwarded <strong>HTML</strong> message with CC a recipient.</p>';
+      const ccRecipient = `someoneelse@${verifiedDomain}`;
+      cy.mailosaurForwardMessage(targetEmailId, {
+        to: `forwardcc@${verifiedDomain}`,
+        html: body,
+        cc: ccRecipient,
+      }).then((message) => {
+        expect(message.id).to.be.ok;
+        expect(message.html.body).to.contain(body);
+        expect(message.cc.length).to.equal(1);
+        expect(message.cc[0].email).to.equal(ccRecipient);
+        done();
+      });
+    });
   });
 
   // TODO - Tested in Node.js client for now due to way emails are created in Cypress plugin tests
@@ -491,6 +526,21 @@ describe('Mailosaur message commands', () => {
       }).then((message) => {
         expect(message.id).to.be.ok;
         expect(message.html.body).to.contain(body);
+        done();
+      });
+    });
+
+    xit('should reply with HTML content with a CC recipient', (done) => {
+      const targetEmailId = emails[0].id;
+      const body = '<p>Reply <strong>HTML</strong> message.</p>';
+      const ccRecipient = `someoneelse@${verifiedDomain}`;
+      cy.mailosaurReplyToMessage(targetEmailId, {
+        html: body,
+      }).then((message) => {
+        expect(message.id).to.be.ok;
+        expect(message.html.body).to.contain(body);
+        expect(message.cc.length).to.equal(1);
+        expect(message.cc[0].email).to.equal(ccRecipient);
         done();
       });
     });
