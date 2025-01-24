@@ -56,7 +56,7 @@ describe('Mailosaur server commands', () => {
     });
 
     it('.mailosaurDeleteServer should delete an existing server', (done) => {
-      cy.mailosaurDeleteServer(retrievedServer.id).then(done);
+      cy.mailosaurDeleteServer(retrievedServer.id).then(() => done());
     });
   });
 });

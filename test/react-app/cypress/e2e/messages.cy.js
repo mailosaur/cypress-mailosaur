@@ -327,7 +327,7 @@ describe('Mailosaur message commands', () => {
       });
     });
   });
-  
+
   describe('.mailosaurGetDeliverabilityReport', () => {
     it('should perform a deliverability report on an email', (done) => {
       const targetId = emails[0].id;
@@ -378,7 +378,7 @@ describe('Mailosaur message commands', () => {
   describe('.mailosaurDeleteMessage', () => {
     it('should delete an email', (done) => {
       const targetEmailId = emails[4].id;
-      cy.mailosaurDeleteMessage(targetEmailId).then(done);
+      cy.mailosaurDeleteMessage(targetEmailId).then(() => done());
     });
   });
 
