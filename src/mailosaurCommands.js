@@ -262,15 +262,61 @@ class MailosaurCommands {
   }
 
   mailosaurListPreviewEmailClients() {
-    return this.request.get('api/previews/clients');
+    return this.request.get('api/screenshots/clients');
   }
 
   mailosaurGenerateEmailPreviews(messageId, options = {}) {
-    return this.request.post(`api/messages/${messageId}/previews`, options);
+    return this.request.post(`api/messages/${messageId}/screenshots`, options);
   }
 
   mailosaurDownloadPreview(previewId) {
-    return this.request.get(`api/files/previews/${previewId}`, { encoding: 'binary' });
+    const timeout = 120000;
+    let pollCount = 0;
+    const startTime = Date.now();
+
+    const fn = (resolve, reject) => () => {
+      const reqOptions = this.request.buildOptions('GET', `api/files/screenshots/${previewId}`);
+      reqOptions.encoding = 'binary';
+
+      return Cypress.backend('http:request', reqOptions)
+        .timeout(timeout)
+        .then(this.request.getResponseHandler(true))
+        .then((result) => {
+          const { body, headers, status } = result;
+
+          if (status === 200) {
+            return resolve(body);
+          }
+
+          if (status !== 202) {
+            return reject(new Error(`Failed to download preview. Status code: ${status}`));
+          }
+
+          const delayPattern = (headers['x-ms-delay'] || '1000')
+            .split(',')
+            .map((x) => parseInt(x, 10));
+
+          const delay = (pollCount >= delayPattern.length)
+            ? delayPattern[delayPattern.length - 1]
+            : delayPattern[pollCount];
+
+          pollCount += 1;
+
+          // Stop if timeout will be exceeded
+          if (((Date.now() - startTime) + delay) > timeout) {
+            return reject(new Error(`An email preview was not generated in time. The email client may not be available, or the preview ID [${previewId}] may be incorrect.`));
+          }
+
+          return setTimeout(fn(resolve, reject), delay);
+        });
+    };
+
+    cy.wrap(new Cypress.Promise((resolve, reject) => {
+      fn(resolve, reject)();
+    }), {
+      log: false,
+      timeout: timeout + 10000,
+    });
   }
 }
 
