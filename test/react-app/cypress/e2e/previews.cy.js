@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 describe('Mailosaur previews commands', () => {
-  const server = Cypress.env('MAILOSAUR_PREVIEWS_SERVER');
+  const server = Cypress.env('MAILOSAUR_SERVER');
 
   describe('.mailosaurListPreviewEmailClients', () => {
     it('should list email clients', () => {
@@ -15,9 +15,7 @@ describe('Mailosaur previews commands', () => {
       cy.mailosaurCreateMessage(server, {})
         .then(email => (
           cy.mailosaurGenerateEmailPreviews(email.id, {
-            previews: [{
-              emailClient: 'OL2021'
-            }]
+            emailClients: ['iphone-16plus-applemail-lightmode-portrait']
           })
         ))
         .then(result => {
