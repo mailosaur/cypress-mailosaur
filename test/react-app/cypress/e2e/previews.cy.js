@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-expressions */
 describe('Mailosaur previews commands', () => {
-  const server = Cypress.env('MAILOSAUR_SERVER');
+  let server
+
+  beforeEach(() => {
+    cy.env(['MAILOSAUR_SERVER']).then(({ MAILOSAUR_SERVER }) => {
+      server = MAILOSAUR_SERVER
+    })
+  })
 
   describe('.mailosaurListPreviewEmailClients', () => {
     it('should list email clients', () => {

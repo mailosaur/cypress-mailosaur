@@ -29,7 +29,7 @@
     "tsc": "node_modules/.bin/tsc src/mailosaurCommands.d.ts --types node"
   },
   "peerDependencies": {
-    "cypress": ">= 2.1.0"
+    "cypress": ">= 15.10.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",

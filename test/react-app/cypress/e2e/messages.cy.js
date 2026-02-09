@@ -100,15 +100,21 @@ const validateEmailSummary = (email) => {
 };
 
 describe('Mailosaur message commands', () => {
-  const server = Cypress.env('MAILOSAUR_SERVER');
-  const verifiedDomain = Cypress.env('MAILOSAUR_VERIFIED_DOMAIN');
+  let server
+  let verifiedDomain
   let emails;
 
-  if (!server) {
-    throw new Error('You must set the MAILOSAUR_SERVER environment variable to run these tests.');
-  }
-
   before(() => {
+    cy.env(['MAILOSAUR_SERVER', 'MAILOSAUR_VERIFIED_DOMAIN'])
+      .then(({ MAILOSAUR_SERVER, MAILOSAUR_VERIFIED_DOMAIN }) => {
+        server = MAILOSAUR_SERVER
+        verifiedDomain = MAILOSAUR_VERIFIED_DOMAIN
+
+        if (!server) {
+          throw new Error('You must set the MAILOSAUR_SERVER environment variable to run these tests.');
+        }
+      })
+
     cy.mailosaurDeleteAllMessages(server)
       .mailosaurCreateMessage(server, {})
       .mailosaurCreateMessage(server, {})

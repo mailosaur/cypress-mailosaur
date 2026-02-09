@@ -43,12 +43,15 @@ class MailosaurCommands {
   }
 
   constructor() {
-    const defaultApiKey = Cypress.env('MAILOSAUR_API_KEY');
-    this.mailosaurSetApiKey(defaultApiKey);
+    cy.env(['MAILOSAUR_API_KEY']).then(({ MAILOSAUR_API_KEY }) => {
+      this.mailosaurSetApiKey(MAILOSAUR_API_KEY);
+    })
   }
 
   mailosaurSetApiKey(apiKey) {
-    this.request = new Request({ apiKey, baseUrl: Cypress.env('MAILOSAUR_BASE_URL') });
+    cy.env(['MAILOSAUR_BASE_URL']).then(({ MAILOSAUR_BASE_URL }) => {
+      this.request = new Request({ apiKey, baseUrl: MAILOSAUR_BASE_URL });
+    })
   }
 
   mailosaurListServers() {
@@ -226,9 +229,11 @@ class MailosaurCommands {
   }
 
   mailosaurGenerateEmailAddress(serverId) {
-    const host = Cypress.env('MAILOSAUR_SMTP_HOST') || 'mailosaur.net';
-    const random = (Math.random() + 1).toString(36).substring(7);
-    return cy.wrap(`${random}@${serverId}.${host}`);
+    cy.env(['MAILOSAUR_SMTP_HOST']).then(({ MAILOSAUR_SMTP_HOST }) => {
+      const host = MAILOSAUR_SMTP_HOST || 'mailosaur.net';
+      const random = (Math.random() + 1).toString(36).substring(7);
+      return cy.wrap(`${random}@${serverId}.${host}`);
+    })
   }
 
   mailosaurGetUsageLimits() {

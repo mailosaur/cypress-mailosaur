@@ -1,18 +1,22 @@
 /* eslint-disable no-unused-expressions */
 describe('Mailosaur files commands', () => {
-  const server = Cypress.env('MAILOSAUR_SERVER');
+  let server
   let email;
 
-  if (!server) {
-    throw new Error('You must set the MAILOSAUR_SERVER environment variable to run these tests.');
-  }
-
   before(() => {
-    cy.mailosaurDeleteAllMessages(server)
-      .mailosaurCreateMessage(server, {})
-      .then((result) => {
-        email = result;
-      });
+    cy.env(['MAILOSAUR_SERVER']).then(({ MAILOSAUR_SERVER }) => {
+      server = MAILOSAUR_SERVER
+
+      if (!server) {
+        throw new Error('You must set the MAILOSAUR_SERVER environment variable to run these tests.');
+      }
+
+      cy.mailosaurDeleteAllMessages(server)
+        .mailosaurCreateMessage(server, {})
+        .then((result) => {
+          email = result;
+        });
+    })
   });
 
   describe('.mailosaurDownloadAttachment', () => {
