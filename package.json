@@ -1,6 +1,6 @@
 {
   "name": "cypress-mailosaur",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Extends Cypress' cy commands that let you integrate email and SMS testing into your continuous integration process.",
   "keywords": [
     "cypress",
@@ -29,7 +29,7 @@
     "tsc": "node_modules/.bin/tsc src/mailosaurCommands.d.ts --types node"
   },
   "peerDependencies": {
-    "cypress": ">= 2.1.0"
+    "cypress": ">= 15.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",

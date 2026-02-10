@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-expressions */
 describe('Mailosaur previews commands', () => {
-  const server = Cypress.env('MAILOSAUR_SERVER');
+  let server;
+
+  before(() => {
+    cy.env(['MAILOSAUR_SERVER']).then(({ MAILOSAUR_SERVER }) => {
+      server = MAILOSAUR_SERVER;
+    });
+  });
 
   describe('.mailosaurListPreviewEmailClients', () => {
     it('should list email clients', () => {
@@ -10,8 +16,11 @@ describe('Mailosaur previews commands', () => {
     });
   });
 
-  (server ? describe : describe.skip)('.mailosaurGenerateEmailPreviews', () => {
-    it('should generate email previews', () => {
+  describe('.mailosaurGenerateEmailPreviews', () => {
+    it('should generate email previews', function () {
+      if (!server) {
+        return this.skip('MAILOSAUR_SERVER environment variable is not set');
+      }
       cy.mailosaurCreateMessage(server, {})
         .then(email => (
           cy.mailosaurGenerateEmailPreviews(email.id, {

@@ -100,25 +100,29 @@ const validateEmailSummary = (email) => {
 };
 
 describe('Mailosaur message commands', () => {
-  const server = Cypress.env('MAILOSAUR_SERVER');
-  const verifiedDomain = Cypress.env('MAILOSAUR_VERIFIED_DOMAIN');
+  let server;
+  let verifiedDomain;
   let emails;
 
-  if (!server) {
-    throw new Error('You must set the MAILOSAUR_SERVER environment variable to run these tests.');
-  }
-
   before(() => {
-    cy.mailosaurDeleteAllMessages(server)
-      .mailosaurCreateMessage(server, {})
-      .mailosaurCreateMessage(server, {})
-      .mailosaurCreateMessage(server, {})
-      .mailosaurCreateMessage(server, {})
-      .mailosaurCreateMessage(server, {})
-      .mailosaurListMessages(server)
-      .then((result) => {
-        emails = result.items;
-      });
+    cy.env(['MAILOSAUR_SERVER', 'MAILOSAUR_VERIFIED_DOMAIN']).then(({ MAILOSAUR_SERVER, MAILOSAUR_VERIFIED_DOMAIN }) => {
+      server = MAILOSAUR_SERVER;
+      verifiedDomain = MAILOSAUR_VERIFIED_DOMAIN;
+      if (!server) {
+        throw new Error('You must set the MAILOSAUR_SERVER environment variable to run these tests.');
+      }
+
+      cy.mailosaurDeleteAllMessages(server)
+        .mailosaurCreateMessage(server, {})
+        .mailosaurCreateMessage(server, {})
+        .mailosaurCreateMessage(server, {})
+        .mailosaurCreateMessage(server, {})
+        .mailosaurCreateMessage(server, {})
+        .mailosaurListMessages(server)
+        .then((result) => {
+          emails = result.items;
+        });
+    });
   });
 
   describe('.mailosaurListMessages', () => {
@@ -382,8 +386,11 @@ describe('Mailosaur message commands', () => {
     });
   });
 
-  (verifiedDomain ? describe : describe.skip)('.mailosaurCreateMessage', () => {
-    it('should send with text content', (done) => {
+  describe('.mailosaurCreateMessage', () => {
+    it('should send with text content', function (done) {
+      if (!verifiedDomain) {
+        return this.skip('MAILOSAUR_VERIFIED_DOMAIN environment variable is not set');
+      }
       const subject = 'New message';
       cy.mailosaurCreateMessage(server, {
         to: `anything@${verifiedDomain}`,
@@ -397,7 +404,10 @@ describe('Mailosaur message commands', () => {
       });
     });
 
-    it('should send with HTML content', (done) => {
+    it('should send with HTML content', function (done) {
+      if (!verifiedDomain) {
+        return this.skip('MAILOSAUR_VERIFIED_DOMAIN environment variable is not set');
+      }
       const subject = 'New message';
       cy.mailosaurCreateMessage(server, {
         to: `anything@${verifiedDomain}`,
@@ -411,7 +421,10 @@ describe('Mailosaur message commands', () => {
       });
     });
 
-    it('should send with HTML content to a CC recipient', (done) => {
+    it('should send with HTML content to a CC recipient', function (done) {
+      if (!verifiedDomain) {
+        return this.skip('MAILOSAUR_VERIFIED_DOMAIN environment variable is not set');
+      }
       const subject = 'CC Message';
       const ccRecipient = `someoneelse@${verifiedDomain}`;
       cy.mailosaurCreateMessage(server, {
@@ -429,7 +442,10 @@ describe('Mailosaur message commands', () => {
       });
     });
 
-    it('should send with attachment', (done) => {
+    it('should send with attachment', function (done) {
+      if (!verifiedDomain) {
+        return this.skip('MAILOSAUR_VERIFIED_DOMAIN environment variable is not set');
+      }
       const subject = 'New message with attachment';
 
       cy.fixture('cat.png').then((fileContent) => {
@@ -459,8 +475,11 @@ describe('Mailosaur message commands', () => {
     });
   });
 
-  (verifiedDomain ? describe : describe.skip)('.mailosaurForwardMessage', () => {
-    it('should forward with text content', (done) => {
+  describe('.mailosaurForwardMessage', () => {
+    it('should forward with text content', function (done) {
+      if (!verifiedDomain) {
+        return this.skip('MAILOSAUR_VERIFIED_DOMAIN environment variable is not set');
+      }
       const targetEmailId = emails[0].id;
       const body = 'Forwarded message';
       cy.mailosaurForwardMessage(targetEmailId, {
@@ -473,7 +492,10 @@ describe('Mailosaur message commands', () => {
       });
     });
 
-    it('should forward with HTML content', (done) => {
+    it('should forward with HTML content', function (done) {
+      if (!verifiedDomain) {
+        return this.skip('MAILOSAUR_VERIFIED_DOMAIN environment variable is not set');
+      }
       const targetEmailId = emails[0].id;
       const body = '<p>Forwarded <strong>HTML</strong> message.</p>';
       cy.mailosaurForwardMessage(targetEmailId, {
@@ -486,7 +508,10 @@ describe('Mailosaur message commands', () => {
       });
     });
 
-    it('should forward with HTML content to a CC recipient', (done) => {
+    it('should forward with HTML content to a CC recipient', function (done) {
+      if (!verifiedDomain) {
+        return this.skip('MAILOSAUR_VERIFIED_DOMAIN environment variable is not set');
+      }
       const targetEmailId = emails[0].id;
       const body = '<p>Forwarded <strong>HTML</strong> message with CC a recipient.</p>';
       const ccRecipient = `someoneelse@${verifiedDomain}`;
@@ -505,7 +530,7 @@ describe('Mailosaur message commands', () => {
   });
 
   // TODO - Tested in Node.js client for now due to way emails are created in Cypress plugin tests
-  (verifiedDomain ? describe : describe.skip)('.mailosaurReplyToMessage', () => {
+  describe('.mailosaurReplyToMessage', () => {
     xit('should reply with text content', (done) => {
       const targetEmailId = emails[0].id;
       const body = 'Reply message';
