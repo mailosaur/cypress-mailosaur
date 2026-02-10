@@ -47,13 +47,14 @@ class MailosaurCommands {
   }
 
   init() {
-    if (!this._request) {
-      return cy.env(['MAILOSAUR_API_KEY', 'MAILOSAUR_BASE_URL']).then(({ MAILOSAUR_API_KEY: apiKey, MAILOSAUR_BASE_URL: baseUrl }) => {
-        this._request = new Request({ apiKey, baseUrl });
-        return this._request;
-      });
+    if (this._request) {
+      return cy.wrap(this._request);
     }
-    return cy.wrap(this._request);
+
+    return cy.env(['MAILOSAUR_API_KEY', 'MAILOSAUR_BASE_URL']).then(({ MAILOSAUR_API_KEY: apiKey, MAILOSAUR_BASE_URL: baseUrl }) => {
+      this._request = new Request({ apiKey, baseUrl });
+      return this._request;
+    });
   }
 
   mailosaurSetApiKey(apiKey) {
