@@ -15,6 +15,15 @@ Using Cypress and Mailosaur together you can:
 
 Mailosaur also provides dummy SMTP servers to test with; allowing you to catch email in staging environments - preventing email being sent to customers by mistake.
 
+## ⚠️ Important: Cypress 15+ Required
+
+**Version 4.0.0+ of this plugin requires Cypress 15.0.0 or later** due to the migration from `Cypress.env` to `cy.env` (the former being deprecated in Cypress 15 and removed in Cypress 16).
+
+If you're using Cypress 14 or earlier, please use version 3.x of this plugin:
+```sh
+npm i -D cypress-mailosaur@3
+```
+
 ## How do I test email with Cypress?
 
 Follow these steps to start testing email with Cypress:
