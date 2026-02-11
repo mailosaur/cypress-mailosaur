@@ -8,39 +8,49 @@ env:
   CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
   CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
 
+permissions:
+  contents: read
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
+          cache: 'npm'
       - run: npm i && npm run test:ci
 
   publish-npm:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Checkout custom actions
+        uses: actions/checkout@v4
         with:
-          node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
-          registry-url: https://registry.npmjs.org/
-      - name: version
+          repository: mailosaur/actions
+          token: ${{ secrets.CUSTOM_ACTIONS_TOKEN }}
+          path: .github/actions
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+      - name: Version
         run: |
           npm --no-git-tag-version --allow-same-version version `git describe --abbrev=0 --tags`
-      - run: npm ci
-      - run: npm publish
+      - name: Build
+        run: npm ci
+      - name: Publish
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      - name: Notify on Failure
-        uses: skitionek/notify-microsoft-teams@master
-        if: ${{ failure() }}
+      - name: Send notifications
+        if: ${{ always() }}
+        uses: ./.github/actions/notify
         with:
-          webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
-          needs: ${{ toJson(needs) }}
-          job: ${{ toJson(job) }}
-          overwrite: "{ title: `${workflow} failed for ${repository.name}` }"
+          webhook-url: ${{ secrets.NOTIFICATION_URL }}
