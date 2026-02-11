@@ -25,9 +25,10 @@ jobs:
     runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout source code
+        uses: actions/checkout@v4
       - name: Checkout custom actions
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: mailosaur/actions
           token: ${{ secrets.CUSTOM_ACTIONS_TOKEN }}
@@ -36,11 +37,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
-      - name: version
+      - name: Version
         run: |
           npm --no-git-tag-version --allow-same-version version `git describe --abbrev=0 --tags`
-      - run: npm ci
-      - run: npm publish
+      - name: Build
+        run: npm ci
+      - name: Publish
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
       - name: Send notifications

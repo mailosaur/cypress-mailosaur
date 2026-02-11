@@ -26,9 +26,10 @@ jobs:
       CYPRESS_MAILOSAUR_VERIFIED_DOMAIN: ${{ secrets.MAILOSAUR_VERIFIED_DOMAIN }}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout source code
+        uses: actions/checkout@v4
       - name: Checkout custom actions
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: mailosaur/actions
           token: ${{ secrets.CUSTOM_ACTIONS_TOKEN }}
@@ -37,7 +38,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
-      - run: npm i && npm run test:ci
+      - name: Build & test
+        run: npm i && npm run test:ci
       - name: Send notifications
         if: ${{ always() }}
         uses: ./.github/actions/notify
@@ -57,9 +59,10 @@ jobs:
       CYPRESS_MAILOSAUR_VERIFIED_DOMAIN: ${{ secrets.MAILOSAUR_VERIFIED_DOMAIN }}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout source code
+        uses: actions/checkout@v4
       - name: Checkout custom actions
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: mailosaur/actions
           token: ${{ secrets.CUSTOM_ACTIONS_TOKEN }}
@@ -68,7 +71,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
-      - run: npm i && npm run test:ci
+      - name: Build & test
+        run: npm i && npm run test:ci
       - name: Send notifications
         if: ${{ always() }}
         uses: ./.github/actions/notify
