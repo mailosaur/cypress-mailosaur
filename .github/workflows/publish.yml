@@ -36,11 +36,8 @@ jobs:
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      - name: Notify on Failure
-        uses: skitionek/notify-microsoft-teams@master
+      - name: Notify on failure
         if: ${{ failure() }}
+        uses: ./.github/actions/notify
         with:
-          webhook_url: ${{ secrets.TEAMS_BUILDS_WEBHOOK }}
-          needs: ${{ toJson(needs) }}
-          job: ${{ toJson(job) }}
-          overwrite: "{ title: `${workflow} failed for ${repository.name}` }"
+          webhook-url: ${{ secrets.NOTIFICATION_URL }}
