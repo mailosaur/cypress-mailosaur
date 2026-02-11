@@ -10,18 +10,19 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
+          cache: 'npm'
       - run: npm i && npm run test:ci
 
   publish-npm:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
@@ -29,12 +30,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: mailosaur/actions
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.CUSTOM_ACTIONS_TOKEN }}
           path: .github/actions
-      - uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
-          registry-url: https://registry.npmjs.org/
+          cache: 'npm'
       - name: version
         run: |
           npm --no-git-tag-version --allow-same-version version `git describe --abbrev=0 --tags`
