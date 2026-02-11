@@ -8,6 +8,9 @@ env:
   CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
   CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ${{ vars.LINUX }}
