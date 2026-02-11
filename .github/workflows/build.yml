@@ -27,13 +27,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Checkout custom actions
+        uses: actions/checkout@v2
+        with:
+          repository: mailosaur/actions
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          path: .github/actions
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
       - run: npm iasdsa && npm run test:ci
-      - name: Notify on failure
-        if: ${{ failure() }}
+      - name: Send notifications
+        if: ${{ always() }}
         uses: ./.github/actions/notify
         with:
           webhook-url: ${{ secrets.NOTIFICATION_URL }}
@@ -52,13 +58,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Checkout custom actions
+        uses: actions/checkout@v2
+        with:
+          repository: mailosaur/actions
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          path: .github/actions
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
       - run: npm i && npm run test:ci
-      - name: Notify on failure
-        if: ${{ failure() }}
+      - name: Send notifications
+        if: ${{ always() }}
         uses: ./.github/actions/notify
         with:
           webhook-url: ${{ secrets.NOTIFICATION_URL }}

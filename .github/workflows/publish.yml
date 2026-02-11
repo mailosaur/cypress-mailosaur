@@ -25,6 +25,12 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
+      - name: Checkout custom actions
+        uses: actions/checkout@v2
+        with:
+          repository: mailosaur/actions
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          path: .github/actions
       - uses: actions/setup-node@v3
         with:
           node-version: 18.13.0 # Usually lts/* but https://github.com/bahmutov/start-server-and-test/issues/333
@@ -36,8 +42,8 @@ jobs:
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      - name: Notify on failure
-        if: ${{ failure() }}
+      - name: Send notifications
+        if: ${{ always() }}
         uses: ./.github/actions/notify
         with:
           webhook-url: ${{ secrets.NOTIFICATION_URL }}
