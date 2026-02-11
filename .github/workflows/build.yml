@@ -19,48 +19,38 @@ permissions:
 
 jobs:
   build:
+    name: Build (${{ matrix.environment }})
     runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
+    
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        environment: [live, next]
 
     env:
-      CYPRESS_MAILOSAUR_BASE_URL: https://mailosaur.com/
+      CYPRESS_MAILOSAUR_BASE_URL: ${{ matrix.environment == 'live' && 'https://mailosaur.com/' || 'https://next.mailosaur.com/' }}
       CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
       CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
-      CYPRESS_MAILOSAUR_VERIFIED_DOMAIN: ${{ secrets.MAILOSAUR_VERIFIED_DOMAIN }}
+      CYPRESS_MAILOSAUR_VERIFIED_DOMAIN: ${{ matrix.environment == 'live' && 'mailosaur.net' || 'mailosaur.email' }}
 
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-      - name: Checkout custom actions
-        uses: actions/checkout@v4
-        with:
-          repository: mailosaur/actions
-          token: ${{ secrets.CUSTOM_ACTIONS_TOKEN }}
-          path: .github/actions
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
       - name: Build & test
         run: npm i && npm run test:ci
-      - name: Send notifications
-        if: ${{ always() }}
-        uses: ./.github/actions/notify
-        with:
-          webhook-url: ${{ secrets.NOTIFICATION_URL }}
 
-  build-next:
+  notify:
+    name: Notify
     if: ${{ always() }}
     needs: build
     runs-on: ${{ vars.LINUX }}
-    timeout-minutes: 10
-
-    env:
-      CYPRESS_MAILOSAUR_BASE_URL: https://next.mailosaur.com/
-      CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
-      CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
-      CYPRESS_MAILOSAUR_VERIFIED_DOMAIN: ${{ secrets.MAILOSAUR_VERIFIED_DOMAIN }}
-
+    
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -70,14 +60,8 @@ jobs:
           repository: mailosaur/actions
           token: ${{ secrets.CUSTOM_ACTIONS_TOKEN }}
           path: .github/actions
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          cache: 'npm'
-      - name: Build & test
-        run: npm i && npm run test:ci
       - name: Send notifications
-        if: ${{ always() }}
         uses: ./.github/actions/notify
         with:
           webhook-url: ${{ secrets.NOTIFICATION_URL }}
+          data: '{"matrixBuildResult": "${{ needs.build.result }}"}'
