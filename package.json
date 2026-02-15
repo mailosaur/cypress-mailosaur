@@ -16,17 +16,20 @@
   "repository": "https://github.com/mailosaur/cypress-mailosaur",
   "bugs": "https://github.com/mailosaur/mailosaur-node/issues",
   "files": [
-    "src"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
-  "main": "index.js",
-  "types": "src/mailosaurCommands.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/types.d.ts",
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "lint": "node_modules/.bin/eslint src test/react-app/src test/react-app/cypress",
     "lint:fix": "node_modules/.bin/eslint --fix src test/react-app/src test/react-app/cypress",
-    "test": "npm run tsc && cd test/react-app && npm run test:ci",
-    "test:ci": "cd test/react-app && npm i && npm run test:ci",
-    "tsc": "node_modules/.bin/tsc src/mailosaurCommands.d.ts --types node"
+    "build": "node_modules/.bin/tsc -p tsconfig.json",
+    "prepack": "npm run build",
+    "test": "npm run build && cd test/react-app && npm run test:ci",
+    "test:ci": "cd test/react-app && npm i && npm run test:ci"
   },
   "peerDependencies": {
     "cypress": ">= 15.0.0"

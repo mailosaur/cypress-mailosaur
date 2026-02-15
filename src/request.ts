@@ -1,12 +1,51 @@
 const pkg = require('../package.json');
 
 /* eslint-disable max-classes-per-file */
+
+type RequestHeaders = {
+  Accept: string;
+  Authorization: string;
+  'User-Agent': string;
+};
+
+interface RequestInitOptions {
+  baseUrl?: string;
+  apiKey?: string;
+}
+
+interface RequestOptions extends Record<string, unknown> {
+  method: string;
+  url: string;
+  headers: RequestHeaders;
+  encoding?: string;
+  qs?: Record<string, string | number | Date | undefined>;
+  json?: unknown;
+  body?: unknown;
+  failOnStatusCode?: boolean;
+}
+
+interface CypressResponse {
+  isOkStatusCode: boolean;
+  status: number;
+  body?: any;
+  headers?: Record<string, unknown>;
+}
+
+declare const btoa: ((data: string) => string) | undefined;
+declare const cy: any;
+
 class Request {
-  constructor(options) {
+  baseUrl: string;
+  apiKey?: string;
+  headers: RequestHeaders;
+
+  constructor(options: RequestInitOptions) {
     this.baseUrl = options.baseUrl || 'https://mailosaur.com/';
     this.apiKey = options.apiKey;
-    const b64 = btoa || ((str) => Buffer.from(str).toString('base64'));
-    const encodedKey = b64(`${this.apiKey}:`);
+    const base64Encode = typeof btoa === 'function'
+      ? btoa
+      : (str: string) => Buffer.from(str).toString('base64');
+    const encodedKey = base64Encode(`${this.apiKey || ''}:`);
     this.headers = {
       Accept: 'application/json',
       Authorization: `Basic ${encodedKey}`,
@@ -14,7 +53,11 @@ class Request {
     };
   }
 
-  buildOptions(method, path, opts = {}) {
+  buildOptions(
+    method: string,
+    path: string,
+    opts: Record<string, unknown> = {}
+  ): RequestOptions {
     if (!this.apiKey) {
       // CYPRESS_ prefix necessary per https://docs.cypress.io/guides/guides/environment-variables.html#Option-3-CYPRESS
       throw new Error('You must set the CYPRESS_MAILOSAUR_API_KEY environment variable to use the Mailosaur plugin.');
@@ -28,12 +71,12 @@ class Request {
         Authorization: this.headers.Authorization,
         'User-Agent': this.headers['User-Agent'],
       },
-      ...opts
-    };
+      ...opts,
+    } as RequestOptions;
   }
 
   getResponseHandler(includeResponseMetadata = false) {
-    return (response) => {
+    return (response: CypressResponse) => {
       if (response.isOkStatusCode) {
         return includeResponseMetadata ? response : response.body;
       }
@@ -42,11 +85,11 @@ class Request {
       switch (response.status) {
         case 400:
           try {
-            const json = response.body;
-            json.errors.forEach(err => {
+            const json = response.body as { errors?: Array<{ field: string; detail: Array<{ description: string }> }> };
+            json.errors?.forEach((err) => {
               message += `(${err.field}) ${err.detail[0].description}\r\n`;
             });
-          } catch (e) {
+          } catch (_e) {
             message = 'Request had one or more invalid parameters.';
           }
           throw new Error(message);
@@ -62,28 +105,33 @@ class Request {
     };
   }
 
-  request(method, path, body, opts = {}) {
+  request(
+    method: string,
+    path: string,
+    body?: unknown,
+    opts: Record<string, unknown> = {}
+  ) {
     const options = this.buildOptions(method, path, opts);
     options.body = body || undefined;
     options.failOnStatusCode = false;
     return cy.request(options).then(this.getResponseHandler());
   }
 
-  get(path, opts) {
+  get(path: string, opts?: Record<string, unknown>) {
     return this.request('GET', path, undefined, opts);
   }
 
-  post(path, body, opts) {
+  post(path: string, body?: unknown, opts?: Record<string, unknown>) {
     return this.request('POST', path, body, opts);
   }
 
-  put(path, body, opts) {
+  put(path: string, body?: unknown, opts?: Record<string, unknown>) {
     return this.request('PUT', path, body, opts);
   }
 
-  del(path, opts) {
+  del(path: string, opts?: Record<string, unknown>) {
     return this.request('DELETE', path, undefined, opts);
   }
 }
 
-module.exports = Request;
+export default Request;
