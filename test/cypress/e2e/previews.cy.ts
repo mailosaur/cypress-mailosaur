@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-expressions */
 describe('Mailosaur previews commands', () => {
-  let server;
+  let server: string;
 
   before(() => {
     cy.env(['MAILOSAUR_SERVER']).then(({ MAILOSAUR_SERVER }) => {
@@ -10,7 +9,7 @@ describe('Mailosaur previews commands', () => {
 
   describe('.mailosaurListPreviewEmailClients', () => {
     it('should list email clients', () => {
-      cy.mailosaurListPreviewEmailClients().then((result) => {
+      cy.mailosaurListPreviewEmailClients().then(result => {
         expect(result.items).to.have.lengthOf.above(1);
       });
     });
@@ -19,17 +18,17 @@ describe('Mailosaur previews commands', () => {
   describe('.mailosaurGenerateEmailPreviews', () => {
     it('should generate email previews', function () {
       if (!server) {
-        return this.skip('MAILOSAUR_SERVER environment variable is not set');
+        this.skip();
       }
       cy.mailosaurCreateMessage(server, {})
-        .then(email => (
-          cy.mailosaurGenerateEmailPreviews(email.id, {
-            emailClients: ['iphone-16plus-applemail-lightmode-portrait']
+        .then(email =>
+          cy.mailosaurGenerateEmailPreviews(email.id!, {
+            emailClients: ['iphone-16plus-applemail-lightmode-portrait'],
           })
-        ))
+        )
         .then(result => {
           expect(result.items).to.have.lengthOf.above(0);
-          return cy.mailosaurDownloadPreview(result.items[0].id);
+          return cy.mailosaurDownloadPreview(result.items![0].id!);
         })
         .then(file => {
           expect(file).to.be.ok;

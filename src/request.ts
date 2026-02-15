@@ -1,7 +1,4 @@
 const pkg = require('../package.json');
-
-/* eslint-disable max-classes-per-file */
-
 type RequestHeaders = {
   Accept: string;
   Authorization: string;
@@ -33,7 +30,6 @@ interface CypressResponse {
 
 declare const btoa: ((data: string) => string) | undefined;
 declare const cy: any;
-
 class Request {
   baseUrl: string;
   apiKey?: string;
@@ -42,9 +38,10 @@ class Request {
   constructor(options: RequestInitOptions) {
     this.baseUrl = options.baseUrl || 'https://mailosaur.com/';
     this.apiKey = options.apiKey;
-    const base64Encode = typeof btoa === 'function'
-      ? btoa
-      : (str: string) => Buffer.from(str).toString('base64');
+    const base64Encode =
+      typeof btoa === 'function'
+        ? btoa
+        : (str: string) => Buffer.from(str).toString('base64');
     const encodedKey = base64Encode(`${this.apiKey || ''}:`);
     this.headers = {
       Accept: 'application/json',
@@ -60,7 +57,9 @@ class Request {
   ): RequestOptions {
     if (!this.apiKey) {
       // CYPRESS_ prefix necessary per https://docs.cypress.io/guides/guides/environment-variables.html#Option-3-CYPRESS
-      throw new Error('You must set the CYPRESS_MAILOSAUR_API_KEY environment variable to use the Mailosaur plugin.');
+      throw new Error(
+        'You must set the CYPRESS_MAILOSAUR_API_KEY environment variable to use the Mailosaur plugin.'
+      );
     }
 
     return {
@@ -85,8 +84,13 @@ class Request {
       switch (response.status) {
         case 400:
           try {
-            const json = response.body as { errors?: Array<{ field: string; detail: Array<{ description: string }> }> };
-            json.errors?.forEach((err) => {
+            const json = response.body as {
+              errors?: Array<{
+                field: string;
+                detail: Array<{ description: string }>;
+              }>;
+            };
+            json.errors?.forEach(err => {
               message += `(${err.field}) ${err.detail[0].description}\r\n`;
             });
           } catch (_e) {
@@ -100,7 +104,9 @@ class Request {
         case 404:
           throw new Error('Not found, check input parameters.');
         default:
-          throw new Error('An API error occurred, see httpResponse for further information.');
+          throw new Error(
+            'An API error occurred, see httpResponse for further information.'
+          );
       }
     };
   }

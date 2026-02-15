@@ -21,12 +21,15 @@
     "LICENSE"
   ],
   "main": "dist/index.js",
-  "types": "dist/types.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "lint": "node_modules/.bin/eslint src test/src test/cypress",
-    "lint:fix": "node_modules/.bin/eslint --fix src test/src test/cypress",
-    "build": "node_modules/.bin/tsc -p tsconfig.json",
+    "lint": "if [ -n \"$CI\" ]; then (npm run lint:strict) else (npm run lint:default) fi",
+    "lint:default": "npx biome check . --diagnostic-level=warn && npx tsc && npx tsc -p test/tsconfig.json",
+    "lint:strict": "npx biome check . --error-on-warnings && npx tsc && npx tsc -p test/tsconfig.json",
+    "lint:fix": "npx biome check --write .",
+    "format": "npx biome format --write .",
+    "build": "npm run lint && npx tsc -p tsconfig.json",
     "prepack": "npm run build",
     "test": "npm run build && cd test && npm run test:ci",
     "test:ci": "cd test && npm i && npm run test:ci"
@@ -35,53 +38,13 @@
     "cypress": ">= 15.0.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.3.13",
     "@types/node": "^18.13.0",
     "coveralls": "^3.1.1",
-    "eslint": "^8.34.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.27.5",
     "sinon": "15.0.1",
     "typescript": "^4.9.5"
   },
   "engines": {
     "node": ">= v10.0.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "airbnb-base"
-    ],
-    "env": {
-      "node": true,
-      "mocha": true
-    },
-    "globals": {
-      "Cypress": true,
-      "cy": true
-    },
-    "rules": {
-      "quotes": [
-        2,
-        "single",
-        {
-          "allowTemplateLiterals": true
-        }
-      ],
-      "consistent-return": 0,
-      "comma-dangle": 0,
-      "max-len": 0,
-      "no-shadow": 0,
-      "class-methods-use-this": 0,
-      "linebreak-style": 0,
-      "arrow-parens": 0,
-      "operator-linebreak": 0,
-      "object-curly-newline": 0,
-      "implicit-arrow-linebreak": 0,
-      "no-else-return": 0,
-      "indent": 0,
-      "lines-between-class-members": 0
-    }
-  },
-  "dependencies": {
-    "@data-provider/core": "^4.0.0"
   }
 }
