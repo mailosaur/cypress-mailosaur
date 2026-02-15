@@ -3,7 +3,6 @@
     "browser": true,
     "node": true,
     "mocha": true,
-    "jest": true,
     "es6": true
   },
   "parser": "@babel/eslint-parser",
