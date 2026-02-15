@@ -29,7 +29,7 @@
     "lint:strict": "npx biome check . --error-on-warnings && npx tsc && npx tsc -p test/tsconfig.json",
     "lint:fix": "npx biome check --write .",
     "format": "npx biome format --write .",
-    "build": "npm run lint && npx tsc -p tsconfig.json",
+    "build": "npm run lint && npm test",
     "prepack": "npm run build",
     "test": "npm run build && cd test && npm run test:ci",
     "test:ci": "cd test && npm i && npm run test:ci"
