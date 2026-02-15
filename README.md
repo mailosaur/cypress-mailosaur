@@ -145,9 +145,9 @@ cy.mailosaurGetMessage(serverId, {
 Install all development dependencies:
 
 ```sh
-cd test/react-app
+cd test
 npm i
-cd ../../
+cd ../
 npm i
 ```
 

@@ -24,21 +24,18 @@
   "types": "dist/types.d.ts",
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "lint": "node_modules/.bin/eslint src test/react-app/src test/react-app/cypress",
-    "lint:fix": "node_modules/.bin/eslint --fix src test/react-app/src test/react-app/cypress",
+    "lint": "node_modules/.bin/eslint src test/src test/cypress",
+    "lint:fix": "node_modules/.bin/eslint --fix src test/src test/cypress",
     "build": "node_modules/.bin/tsc -p tsconfig.json",
     "prepack": "npm run build",
-    "test": "npm run build && cd test/react-app && npm run test:ci",
-    "test:ci": "cd test/react-app && npm i && npm run test:ci"
+    "test": "npm run build && cd test && npm run test:ci",
+    "test:ci": "cd test && npm i && npm run test:ci"
   },
   "peerDependencies": {
     "cypress": ">= 15.0.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.19.1",
-    "@babel/preset-react": "^7.18.6",
     "@types/node": "^18.13.0",
-    "babel-eslint": "10.1.0",
     "coveralls": "^3.1.1",
     "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -83,5 +80,8 @@
       "indent": 0,
       "lines-between-class-members": 0
     }
+  },
+  "dependencies": {
+    "@data-provider/core": "^4.0.0"
   }
 }
