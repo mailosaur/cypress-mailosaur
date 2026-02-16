@@ -1282,7 +1282,7 @@ class MailosaurCommands {
   mailosaurDownloadAttachment(attachmentId: string) {
     return this.init().then((req: Request) =>
       req.get(`api/files/attachments/${attachmentId}`, { encoding: 'binary' })
-    ) as Cypress.Chainable<unknown>;
+    ) as Cypress.Chainable<Buffer>;
   }
 
   /**
@@ -1513,7 +1513,7 @@ class MailosaurCommands {
           timeout: timeout + 10000,
         }
       );
-    }) as Cypress.Chainable<unknown>;
+    }) as Cypress.Chainable<Buffer>;
   }
 }
 
@@ -1773,7 +1773,7 @@ declare global {
          * The identifier for the required attachment.
          */
         attachmentId: string
-      ): Cypress.Chainable<unknown>;
+      ): Cypress.Chainable<Buffer>;
 
       /**
        * Downloads an EML file representing the specified email.
@@ -1794,7 +1794,7 @@ declare global {
          * The identifier of the email preview to be downloaded.
          */
         previewId: string
-      ): Cypress.Chainable<unknown>;
+      ): Cypress.Chainable<Buffer>;
 
       /**
        * Permanently deletes a message. Also deletes any attachments related to the message. This operation cannot be undone.
