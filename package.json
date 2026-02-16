@@ -32,7 +32,7 @@
     "build": "npm run lint && npx tsc -p tsconfig.json",
     "prepack": "npm run build",
     "test": "npm run build && cd test && npm run test:ci",
-    "test:ci": "npm run build && cd test && npm i && npm run test:ci"
+    "test:ci": "npm run build && cd test && npm run test:ci"
   },
   "peerDependencies": {
     "cypress": ">= 15.0.0"

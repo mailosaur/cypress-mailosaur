@@ -39,8 +39,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
+      - name: Install dependencies
+        run: npm i && npm i -C test
       - name: Build & test
-        run: npm i && npm run test:ci
+        run: npm run test:ci
 
   notify:
     name: Notify
