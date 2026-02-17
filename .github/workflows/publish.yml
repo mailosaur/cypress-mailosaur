@@ -12,22 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    runs-on: ${{ vars.LINUX }}
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm i && npm i -C test
-      - name: Build & test
-        run: npm run test:ci
-
-  publish-npm:
-    needs: build
+  publish:
     runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
     steps:
@@ -46,12 +31,14 @@ jobs:
       - name: Version
         run: |
           npm --no-git-tag-version --allow-same-version version `git describe --abbrev=0 --tags`
-      - name: Build
-        run: npm ci
+      - name: Install dependencies
+        run: npm ci && npm ci -C test
+      - name: Build & test
+        run: npm run test:ci
       - name: Publish
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
       - name: Send notifications
         if: ${{ always() }}
         uses: ./.github/actions/notify
