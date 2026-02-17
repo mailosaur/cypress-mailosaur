@@ -1,6 +1,6 @@
 {
   "name": "cypress-mailosaur",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Extends Cypress' cy commands that let you integrate email and SMS testing into your continuous integration process.",
   "keywords": [
     "cypress",
