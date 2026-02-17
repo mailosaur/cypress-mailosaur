@@ -1,5 +1,5 @@
 {
-  "public": "build",
+  "public": "dist",
   "trailingSlash": false,
   "directoryListing": false,
   "cleanUrls": true,
