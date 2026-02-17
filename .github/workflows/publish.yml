@@ -21,7 +21,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
-      - run: npm i && npm run test:ci
+      - name: Install dependencies
+        run: npm i && npm i -C test
+      - name: Build & test
+        run: npm run test:ci
 
   publish-npm:
     needs: build

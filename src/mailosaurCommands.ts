@@ -1,4 +1,6 @@
-/// <reference types="cypress" />
+/* eslint-disable class-methods-use-this */
+
+import Request from './request';
 
 /**
  * Contact information for a message sender or recipient.
@@ -86,7 +88,7 @@ export interface Attachment {
   /**
    * Unique identifier for the attachment.
    */
-  id: string;
+  id?: string;
   /**
    * The MIME type of the attachment.
    */
@@ -167,7 +169,7 @@ export interface Message {
   /**
    * The type of message.
    */
-  type: "Email" | "SMS";
+  type: 'Email' | 'SMS';
   /**
    * The sender of the message.
    */
@@ -227,7 +229,7 @@ export interface MessageSummary {
   /**
    * The type of message.
    */
-  type: "Email" | "SMS";
+  type: 'Email' | 'SMS';
   /**
    * The sender of the message.
    */
@@ -302,7 +304,7 @@ export interface SearchCriteria {
    * If set to `ALL` (default), then only results that match all specified criteria will be returned.
    * If set to `ANY`, results that match any of the specified criteria will be returned.
    */
-  match?: "ALL" | "ANY";
+  match?: 'ALL' | 'ANY';
 }
 
 /**
@@ -412,7 +414,7 @@ export interface MessageReplyOptions {
 /**
  * Mailosaur virtual SMTP/SMS server.
  */
-export interface Server {
+export interface Inbox {
   /**
    * Unique identifier for the server.
    */
@@ -450,7 +452,7 @@ export interface ServerListResult {
    * are returned sorted by creation date, with the most recently-created server
    * appearing first.
    */
-  items?: Server[];
+  items?: Inbox[];
 }
 
 /**
@@ -877,9 +879,647 @@ export interface PreviewRequestOptions {
   emailClients: string[];
 }
 
+declare const cy: any;
+declare const Cypress: any;
+
+class MailosaurCommands {
+  static get cypressCommands(): string[] {
+    return [
+      'mailosaurSetApiKey',
+      'mailosaurListServers',
+      'mailosaurCreateServer',
+      'mailosaurGetServer',
+      'mailosaurGetServerPassword',
+      'mailosaurUpdateServer',
+      'mailosaurDeleteServer',
+      'mailosaurListMessages',
+      'mailosaurCreateMessage',
+      'mailosaurForwardMessage',
+      'mailosaurReplyToMessage',
+      'mailosaurGetMessage',
+      'mailosaurGetMessageById',
+      'mailosaurSearchMessages',
+      'mailosaurGetMessagesBySubject',
+      'mailosaurGetMessagesByBody',
+      'mailosaurGetMessagesBySentFrom',
+      'mailosaurGetMessagesBySentTo',
+      'mailosaurDeleteMessage',
+      'mailosaurDeleteAllMessages',
+      'mailosaurDownloadAttachment',
+      'mailosaurDownloadMessage',
+      'mailosaurGetSpamAnalysis',
+      'mailosaurGetDeliverabilityReport',
+      'mailosaurGenerateEmailAddress',
+      'mailosaurGetUsageLimits',
+      'mailosaurGetUsageTransactions',
+      'mailosaurListDevices',
+      'mailosaurCreateDevice',
+      'mailosaurGetDeviceOtp',
+      'mailosaurDeleteDevice',
+      'mailosaurListPreviewEmailClients',
+      'mailosaurGenerateEmailPreviews',
+      'mailosaurDownloadPreview',
+    ];
+  }
+
+  private _request: Request | null;
+
+  constructor() {
+    this._request = null;
+  }
+
+  init() {
+    if (this._request) {
+      return cy.wrap(this._request);
+    }
+
+    return cy
+      .env(['MAILOSAUR_API_KEY', 'MAILOSAUR_BASE_URL'])
+      .then(
+        ({
+          MAILOSAUR_API_KEY: apiKey,
+          MAILOSAUR_BASE_URL: baseUrl,
+        }: {
+          MAILOSAUR_API_KEY?: string;
+          MAILOSAUR_BASE_URL?: string;
+        }) => {
+          this._request = new Request({ apiKey, baseUrl });
+          return this._request;
+        }
+      );
+  }
+
+  mailosaurSetApiKey(apiKey: string) {
+    return cy
+      .env(['MAILOSAUR_BASE_URL'])
+      .then(
+        ({ MAILOSAUR_BASE_URL: baseUrl }: { MAILOSAUR_BASE_URL?: string }) => {
+          this._request = new Request({ apiKey, baseUrl });
+        }
+      );
+  }
+
+  /**
+   * Returns a list of your virtual servers. Servers are returned sorted in alphabetical order.
+   */
+  mailosaurListServers() {
+    return this.init().then((req: Request) =>
+      req.get('api/servers')
+    ) as Cypress.Chainable<ServerListResult>;
+  }
+
+  /**
+   * Creates a new virtual server.
+   * @param options Options used to create a new Mailosaur server.
+   */
+  mailosaurCreateServer(options: ServerCreateOptions) {
+    return this.init().then((req: Request) =>
+      req.post('api/servers', options)
+    ) as Cypress.Chainable<Inbox>;
+  }
+
+  /**
+   * Retrieves the detail for a single server.
+   * @param serverId The unique identifier of the server.
+   */
+  mailosaurGetServer(serverId: string) {
+    return this.init().then((req: Request) =>
+      req.get(`api/servers/${serverId}`)
+    ) as Cypress.Chainable<Inbox>;
+  }
+
+  /**
+   * Retrieves the password for a server. This password can be used for SMTP, POP3, and IMAP connectivity.
+   * @param serverId The unique identifier of the server.
+   */
+  mailosaurGetServerPassword(serverId: string) {
+    return this.init().then((req: Request) =>
+      req
+        .get(`api/servers/${serverId}/password`)
+        .then((result: { value: string }) => result.value)
+    ) as Cypress.Chainable<string>;
+  }
+
+  /**
+   * Updates the attributes of a server.
+   * @param server The updated server.
+   */
+  mailosaurUpdateServer(server: Inbox = {}) {
+    return this.init().then((req: Request) =>
+      req.put(`api/servers/${server.id}`, server)
+    ) as Cypress.Chainable<Inbox>;
+  }
+
+  /**
+   * Permanently delete a server. This will also delete all messages, associated attachments, etc. within the server. This operation cannot be undone.
+   * @param serverId The unique identifier of the server.
+   */
+  mailosaurDeleteServer(serverId: string) {
+    return this.init().then((req: Request) =>
+      req.del(`api/servers/${serverId}`)
+    ) as Cypress.Chainable<null>;
+  }
+
+  /**
+   * Permenantly delete all messages within a server.
+   * @param serverId The unique identifier of the server.
+   */
+  mailosaurDeleteAllMessages(serverId: string) {
+    return this.init().then((req: Request) =>
+      req.del(`api/messages?server=${serverId}`)
+    ) as Cypress.Chainable<null>;
+  }
+
+  /**
+   * Returns a list of your messages in summary form. The summaries are returned sorted by received date, with the most recently-received messages appearing first.
+   * @param serverId The unique identifier of the required server.
+   * @param options Message listing options.
+   */
+  mailosaurListMessages(serverId: string, options: MessageListOptions = {}) {
+    return this.init().then((req: Request) => {
+      const qs = {
+        server: serverId,
+        page: options.page,
+        itemsPerPage: options.itemsPerPage,
+        receivedAfter: options.receivedAfter,
+        dir: options.dir,
+      };
+
+      return req.get('api/messages', { qs });
+    }) as Cypress.Chainable<MessageListResult>;
+  }
+
+  /**
+   * Creates a new message that can be sent to a verified email address. This is useful
+   * in scenarios where you want an email to trigger a workflow in your product.
+   * @param serverId The unique identifier of the required server.
+   * @param options Options to use when creating a new message.
+   */
+  mailosaurCreateMessage(serverId: string, options: MessageCreateOptions) {
+    return this.init().then((req: Request) =>
+      req.post(`api/messages?server=${serverId}`, options)
+    ) as Cypress.Chainable<Message>;
+  }
+
+  /**
+   * Forwards the specified email to a verified email address.
+   * @param messageId The unique identifier of the message to be forwarded.
+   * @param options Options to use when forwarding a message.
+   */
+  mailosaurForwardMessage(messageId: string, options: MessageForwardOptions) {
+    return this.init().then((req: Request) =>
+      req.post(`api/messages/${messageId}/forward`, options)
+    ) as Cypress.Chainable<Message>;
+  }
+
+  /**
+   * Sends a reply to the specified message. This is useful for when simulating a user replying to one of your email or SMS messages.
+   * @param messageId The unique identifier of the message to be forwarded.
+   * @param options Options to use when replying to a message.
+   */
+  mailosaurReplyToMessage(messageId: string, options: MessageReplyOptions) {
+    return this.init().then((req: Request) =>
+      req.post(`api/messages/${messageId}/reply`, options)
+    ) as Cypress.Chainable<Message>;
+  }
+
+  /**
+   * Waits for a message to be found. Returns as soon as a message matching the specified search criteria is found.
+   * **Recommended:** This is the most efficient method of looking up a message, therefore we recommend using it wherever possible.
+   * @param serverId The unique identifier of the containing server.
+   * @param criteria The criteria with which to find messages during a search.
+   * @param options Search options.
+   */
+  mailosaurGetMessage(
+    serverId: string,
+    criteria: SearchCriteria = {},
+    options: SearchOptions = {}
+  ) {
+    // Only return 1 result
+    options.page = 0;
+    options.itemsPerPage = 1;
+
+    // Default timeout to 10s
+    options.timeout = options.timeout || 10000;
+
+    // Default receivedAfter to 1h
+    options.receivedAfter =
+      options.receivedAfter || new Date(Date.now() - 3600000);
+
+    return cy
+      .mailosaurSearchMessages(serverId, criteria, options)
+      .then((result: MessageListResult) =>
+        cy.mailosaurGetMessageById(result.items?.[0].id)
+      ) as Cypress.Chainable<Message>;
+  }
+
+  /**
+   * Retrieves the detail for a single message. Must be used in conjunction with either list or
+   * search in order to get the unique identifier for the required message.
+   * @param messageId The unique identifier of the message to be retrieved.
+   */
+  mailosaurGetMessageById(messageId: string) {
+    return this.init().then((req: Request) =>
+      req.get(`api/messages/${messageId}`)
+    ) as Cypress.Chainable<Message>;
+  }
+
+  /**
+   * Returns a list of messages matching the specified search criteria, in summary form.
+   * The messages are returned sorted by received date, with the most recently-received messages appearing first.
+   * @param serverId The unique identifier of the server to search.
+   * @param searchCriteria The criteria with which to find messages during a search.
+   * @param options Search options.
+   */
+  mailosaurSearchMessages(
+    serverId: string,
+    searchCriteria: SearchCriteria = {},
+    options: SearchOptions = {}
+  ) {
+    return this.init().then((req: Request) => {
+      let pollCount = 0;
+      const startTime = Date.now();
+
+      const qs = {
+        server: serverId,
+        page: options.page,
+        itemsPerPage: options.itemsPerPage,
+        receivedAfter: options.receivedAfter,
+        dir: options.dir,
+      };
+
+      if (!Number.isInteger(options.timeout)) {
+        options.timeout = 0;
+      }
+
+      if (typeof options.errorOnTimeout !== 'boolean') {
+        options.errorOnTimeout = true;
+      }
+
+      const fn =
+        (
+          resolve: (value: MessageListResult) => void,
+          reject: (reason?: Error) => void
+        ) =>
+        () => {
+          const reqOptions = req.buildOptions('POST', 'api/messages/search');
+          reqOptions.qs = qs;
+          reqOptions.json = searchCriteria;
+
+          return Cypress.backend('http:request', reqOptions)
+            .timeout(10000)
+            .then(req.getResponseHandler(true))
+            .then(
+              (result: {
+                body: MessageListResult;
+                headers: Record<string, string>;
+                status: number;
+              }) => {
+                const { body, headers } = result;
+
+                if (options.timeout && !body.items?.length) {
+                  const delayPattern = (headers['x-ms-delay'] || '1000')
+                    .split(',')
+                    .map((x: string) => parseInt(x, 10));
+
+                  const delay =
+                    pollCount >= delayPattern.length
+                      ? delayPattern[delayPattern.length - 1]
+                      : delayPattern[pollCount];
+
+                  pollCount += 1;
+
+                  // Stop if timeout will be exceeded
+                  if (Date.now() - startTime + delay > (options.timeout || 0)) {
+                    return options.errorOnTimeout === false
+                      ? resolve(body)
+                      : reject(
+                          new Error(
+                            'No matching messages found in time. By default, only messages received in the last hour are checked ' +
+                              `(use receivedAfter to override this). The search criteria used for this query was ` +
+                              `[${JSON.stringify(searchCriteria)}] which timed out after ${options.timeout}ms`
+                          )
+                        );
+                  }
+
+                  return setTimeout(fn(resolve, reject), delay);
+                }
+
+                return resolve(body);
+              }
+            );
+        };
+
+      return cy.wrap(
+        new Cypress.Promise(
+          (
+            resolve: (value: MessageListResult) => void,
+            reject: (reason?: Error) => void
+          ) => {
+            fn(resolve, reject)();
+          }
+        ),
+        {
+          log: false,
+          timeout: (options.timeout || 0) + 10000,
+        }
+      );
+    }) as Cypress.Chainable<MessageListResult>;
+  }
+
+  /**
+   * Returns a list of messages matching the specified subject, in summary form.
+   * The messages are returned sorted by received date, with the most recently-received messages appearing first.
+   * @param serverId The unique identifier of the server to search.
+   * @param subject The value to seek within the subject line of a target email.
+   */
+  mailosaurGetMessagesBySubject(serverId: string, subject: string) {
+    return cy.mailosaurSearchMessages(serverId, {
+      subject,
+    }) as Cypress.Chainable<MessageListResult>;
+  }
+
+  /**
+   * Returns a list of messages matching the specified body, in summary form.
+   * The messages are returned sorted by received date, with the most recently-received messages appearing first.
+   * @param serverId The unique identifier of the server to search.
+   * @param body The value to seek within the body of the target message.
+   */
+  mailosaurGetMessagesByBody(serverId: string, body: string) {
+    return cy.mailosaurSearchMessages(serverId, {
+      body,
+    }) as Cypress.Chainable<MessageListResult>;
+  }
+
+  /**
+   * Returns a list of messages matching the specified sender, in summary form.
+   * The messages are returned sorted by received date, with the most recently-received messages appearing first.
+   * @param serverId The unique identifier of the server to search.
+   * @param sentFrom The full email address (or phone number for SMS) from which the target message was sent.
+   */
+  mailosaurGetMessagesBySentFrom(serverId: string, sentFrom: string) {
+    return cy.mailosaurSearchMessages(serverId, {
+      sentFrom,
+    }) as Cypress.Chainable<MessageListResult>;
+  }
+
+  /**
+   * Returns a list of messages matching the specified recipient, in summary form.
+   * The messages are returned sorted by received date, with the most recently-received messages appearing first.
+   * @param serverId The unique identifier of the server to search.
+   * @param sentTo The full email address (or phone number for SMS) to which the target message was sent.
+   */
+  mailosaurGetMessagesBySentTo(serverId: string, sentTo: string) {
+    return cy.mailosaurSearchMessages(serverId, {
+      sentTo,
+    }) as Cypress.Chainable<MessageListResult>;
+  }
+
+  /**
+   * Downloads a single attachment.
+   * @param attachmentId The identifier for the required attachment.
+   */
+  mailosaurDownloadAttachment(attachmentId: string) {
+    return this.init().then((req: Request) =>
+      req.get(`api/files/attachments/${attachmentId}`, { encoding: 'binary' })
+    ) as Cypress.Chainable<Buffer>;
+  }
+
+  /**
+   * Downloads an EML file representing the specified email.
+   * @param messageId The identifier for the required message.
+   */
+  mailosaurDownloadMessage(messageId: string) {
+    return this.init().then((req: Request) =>
+      req.get(`api/files/email/${messageId}`)
+    ) as Cypress.Chainable<string>;
+  }
+
+  /**
+   * Permanently deletes a message. Also deletes any attachments related to the message. This operation cannot be undone.
+   * @param messageId The identifier for the message.
+   */
+  mailosaurDeleteMessage(messageId: string) {
+    return this.init().then((req: Request) =>
+      req.del(`api/messages/${messageId}`)
+    ) as Cypress.Chainable<null>;
+  }
+
+  /**
+   * Perform a spam analysis of an email.
+   * @param messageId The identifier of the message to be analyzed.
+   */
+  mailosaurGetSpamAnalysis(messageId: string) {
+    return this.init().then((req: Request) =>
+      req.get(`api/analysis/spam/${messageId}`)
+    ) as Cypress.Chainable<SpamAnalysisResult>;
+  }
+
+  /**
+   * Perform a deliverability report of an email.
+   * @param messageId The identifier of the message to be analyzed.
+   */
+  mailosaurGetDeliverabilityReport(messageId: string) {
+    return this.init().then((req: Request) =>
+      req.get(`api/analysis/deliverability/${messageId}`)
+    ) as Cypress.Chainable<DeliverabilityReport>;
+  }
+
+  /**
+   * Generates a random email address by appending a random string in front of the server's
+   * domain name.
+   * @param serverId The identifier of the server.
+   */
+  mailosaurGenerateEmailAddress(serverId: string) {
+    return cy
+      .env(['MAILOSAUR_SMTP_HOST'])
+      .then(
+        ({ MAILOSAUR_SMTP_HOST: host }: { MAILOSAUR_SMTP_HOST?: string }) => {
+          const actualHost = host || 'mailosaur.net';
+          const random = (Math.random() + 1).toString(36).substring(7);
+          return cy.wrap(`${random}@${serverId}.${actualHost}`);
+        }
+      ) as Cypress.Chainable<string>;
+  }
+
+  /**
+   * Retrieve account usage limits. Details the current limits and usage for your account.
+   * This endpoint requires authentication with an account-level API key.
+   */
+  mailosaurGetUsageLimits() {
+    return this.init().then((req: Request) =>
+      req.get('api/usage/limits')
+    ) as Cypress.Chainable<UsageAccountLimits>;
+  }
+
+  /**
+   * Retrieves the last 31 days of transactional usage.
+   * This endpoint requires authentication with an account-level API key.
+   */
+  mailosaurGetUsageTransactions() {
+    return this.init().then((req: Request) =>
+      req.get('api/usage/transactions')
+    ) as Cypress.Chainable<UsageTransactionListResult>;
+  }
+
+  /**
+   * Returns a list of your virtual security devices.
+   */
+  mailosaurListDevices() {
+    return this.init().then((req: Request) =>
+      req.get('api/devices')
+    ) as Cypress.Chainable<DeviceListResult>;
+  }
+
+  /**
+   * Creates a new virtual security device.
+   * @param options Options used to create a new Mailosaur virtual security device.
+   */
+  mailosaurCreateDevice(options: DeviceCreateOptions) {
+    return this.init().then((req: Request) =>
+      req.post('api/devices', options)
+    ) as Cypress.Chainable<Device>;
+  }
+
+  /**
+   * Retrieves the current one-time password for a saved device, or given base32-encoded shared secret.
+   * @param query Either the unique identifier of the device, or a base32-encoded shared secret.
+   */
+  mailosaurGetDeviceOtp(query: string) {
+    return this.init().then((req: Request) => {
+      if (!query || query.indexOf('-') > -1) {
+        return req.get(`api/devices/${query}/otp`);
+      }
+
+      return req.post('api/devices/otp', {
+        sharedSecret: query,
+      });
+    }) as Cypress.Chainable<OtpResult>;
+  }
+
+  /**
+   * Permanently delete a device. This operation cannot be undone.
+   * @param deviceId The unique identifier of the device.
+   */
+  mailosaurDeleteDevice(deviceId: string) {
+    return this.init().then((req: Request) =>
+      req.del(`api/devices/${deviceId}`)
+    ) as Cypress.Chainable<null>;
+  }
+
+  /**
+   * List all email clients that can be used to generate email previews.
+   */
+  mailosaurListPreviewEmailClients() {
+    return this.init().then((req: Request) =>
+      req.get('api/screenshots/clients')
+    ) as Cypress.Chainable<EmailClientListResult>;
+  }
+
+  /**
+   * Generates screenshots of an email rendered in the specified email clients.
+   * @param messageId The identifier of the email to preview.
+   * @param options The options with which to generate previews.
+   */
+  mailosaurGenerateEmailPreviews(
+    messageId: string,
+    options: PreviewRequestOptions
+  ) {
+    return this.init().then((req: Request) =>
+      req.post(`api/messages/${messageId}/screenshots`, options)
+    ) as Cypress.Chainable<PreviewListResult>;
+  }
+
+  /**
+   * Downloads a screenshot of your email rendered in a real email client. Simply supply
+   * the unique identifier for the required preview.
+   * @param previewId The identifier of the email preview to be downloaded.
+   */
+  mailosaurDownloadPreview(previewId: string) {
+    return this.init().then((req: Request) => {
+      const timeout = 120000;
+      let pollCount = 0;
+      const startTime = Date.now();
+
+      const fn =
+        (resolve: (value: unknown) => void, reject: (reason?: Error) => void) =>
+        () => {
+          const reqOptions = req.buildOptions(
+            'GET',
+            `api/files/screenshots/${previewId}`
+          );
+          reqOptions.encoding = 'binary';
+
+          return Cypress.backend('http:request', reqOptions)
+            .timeout(timeout)
+            .then(req.getResponseHandler(true))
+            .then(
+              (result: {
+                body: unknown;
+                headers: Record<string, string>;
+                status: number;
+              }) => {
+                const { body, headers, status } = result;
+
+                if (status === 200) {
+                  return resolve(body);
+                }
+
+                if (status !== 202) {
+                  return reject(
+                    new Error(
+                      `Failed to download preview. Status code: ${status}`
+                    )
+                  );
+                }
+
+                const delayPattern = (headers['x-ms-delay'] || '1000')
+                  .split(',')
+                  .map((x: string) => parseInt(x, 10));
+
+                const delay =
+                  pollCount >= delayPattern.length
+                    ? delayPattern[delayPattern.length - 1]
+                    : delayPattern[pollCount];
+
+                pollCount += 1;
+
+                // Stop if timeout will be exceeded
+                if (Date.now() - startTime + delay > timeout) {
+                  return reject(
+                    new Error(
+                      `An email preview was not generated in time. The email client may not be available, or the preview ID ` +
+                        `[${previewId}] may be incorrect.`
+                    )
+                  );
+                }
+
+                return setTimeout(fn(resolve, reject), delay);
+              }
+            );
+        };
+
+      return cy.wrap(
+        new Cypress.Promise(
+          (
+            resolve: (value: unknown) => void,
+            reject: (reason?: Error) => void
+          ) => {
+            fn(resolve, reject)();
+          }
+        ),
+        {
+          log: false,
+          timeout: timeout + 10000,
+        }
+      );
+    }) as Cypress.Chainable<Buffer>;
+  }
+}
+
 declare global {
   namespace Cypress {
-    interface Chainable {
+    interface Chainable<Subject = any> {
       /**
        * Returns a list of your virtual servers. Servers are returned sorted in alphabetical order.
        */
@@ -893,7 +1533,7 @@ declare global {
          * Options used to create a new Mailosaur server.
          */
         options: ServerCreateOptions
-      ): Cypress.Chainable<Server>;
+      ): Cypress.Chainable<Inbox>;
 
       /**
        * Retrieves the detail for a single server.
@@ -903,7 +1543,7 @@ declare global {
          * The unique identifier of the server.
          */
         serverId: string
-      ): Cypress.Chainable<Server>;
+      ): Cypress.Chainable<Inbox>;
 
       /**
        * Retrieves the password for a server. This password can be used for SMTP, POP3, and IMAP connectivity.
@@ -922,8 +1562,8 @@ declare global {
         /**
          * The updated server.
          */
-        server: Server
-      ): Cypress.Chainable<Server>;
+        server: Inbox
+      ): Cypress.Chainable<Inbox>;
 
       /**
        * Permanently delete a server. This will also delete all messages, associated attachments, etc. within the server. This operation cannot be undone.
@@ -1133,7 +1773,7 @@ declare global {
          * The identifier for the required attachment.
          */
         attachmentId: string
-      ): Cypress.Chainable<unknown>;
+      ): Cypress.Chainable<Buffer>;
 
       /**
        * Downloads an EML file representing the specified email.
@@ -1154,7 +1794,7 @@ declare global {
          * The identifier of the email preview to be downloaded.
          */
         previewId: string
-      ): Cypress.Chainable<unknown>;
+      ): Cypress.Chainable<Buffer>;
 
       /**
        * Permanently deletes a message. Also deletes any attachments related to the message. This operation cannot be undone.
@@ -1251,3 +1891,5 @@ declare global {
     }
   }
 }
+
+export default MailosaurCommands;

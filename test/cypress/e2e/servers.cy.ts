@@ -1,8 +1,9 @@
-/* eslint-disable no-unused-expressions */
+import type { Inbox } from '../../../dist/mailosaurCommands';
+
 describe('Mailosaur server commands', () => {
   describe('.mailosaurListServers', () => {
     it('should list servers', () => {
-      cy.mailosaurListServers().then((result) => {
+      cy.mailosaurListServers().then(result => {
         expect(result.items).to.have.lengthOf.above(3);
       });
     });
@@ -10,13 +11,13 @@ describe('Mailosaur server commands', () => {
 
   describe('CRUD', () => {
     const serverName = 'My test';
-    let createdServer;
-    let retrievedServer;
+    let createdServer: Inbox;
+    let retrievedServer: Inbox;
 
-    it('.mailosaurCreateServer should create a new server', (done) => {
+    it('.mailosaurCreateServer should create a new server', done => {
       cy.mailosaurCreateServer({
         name: serverName,
-      }).then((server) => {
+      }).then(server => {
         createdServer = server;
         expect(createdServer.id).to.be.ok;
         expect(createdServer.name).to.equal(serverName);
@@ -26,8 +27,8 @@ describe('Mailosaur server commands', () => {
       });
     });
 
-    it('.mailosaurGetServer should retrieve an existing server', (done) => {
-      cy.mailosaurGetServer(createdServer.id).then((server) => {
+    it('.mailosaurGetServer should retrieve an existing server', done => {
+      cy.mailosaurGetServer(createdServer.id!).then(server => {
         retrievedServer = server;
         expect(retrievedServer.id).to.equal(createdServer.id);
         expect(retrievedServer.name).to.equal(createdServer.name);
@@ -37,16 +38,16 @@ describe('Mailosaur server commands', () => {
       });
     });
 
-    it('.mailosaurGetServerPassword should retrieve password of an existing server', (done) => {
-      cy.mailosaurGetServerPassword(createdServer.id).then((password) => {
+    it('.mailosaurGetServerPassword should retrieve password of an existing server', done => {
+      cy.mailosaurGetServerPassword(createdServer.id!).then(password => {
         expect(password).to.have.lengthOf.at.least(8);
         done();
       });
     });
 
-    it('.mailosaurUpdateServer should update an existing server', (done) => {
+    it('.mailosaurUpdateServer should update an existing server', done => {
       retrievedServer.name += ' updated with ellipsis … and emoji 👨🏿‍🚒';
-      cy.mailosaurUpdateServer(retrievedServer).then((server) => {
+      cy.mailosaurUpdateServer(retrievedServer).then(server => {
         expect(server.id).to.equal(retrievedServer.id);
         expect(server.name).to.equal(retrievedServer.name);
         expect(server.users).to.deep.equal(retrievedServer.users);
@@ -55,8 +56,8 @@ describe('Mailosaur server commands', () => {
       });
     });
 
-    it('.mailosaurDeleteServer should delete an existing server', (done) => {
-      cy.mailosaurDeleteServer(retrievedServer.id).then(() => done());
+    it('.mailosaurDeleteServer should delete an existing server', done => {
+      cy.mailosaurDeleteServer(retrievedServer.id!).then(() => done());
     });
   });
 });
