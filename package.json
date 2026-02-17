@@ -26,7 +26,7 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "lint": "if [ -n \"$CI\" ]; then (npm run lint:strict) else (npm run lint:default) fi",
     "lint:default": "npx biome check . --diagnostic-level=warn && npx tsc && npx tsc -p test/tsconfig.json",
-    "lint:strict": "npx biome check . --error-on-warnings && npx tsc && npx tsc -p test/tsconfig.json",
+    "lint:strict": "npx biome check . --diagnostic-level=warn --error-on-warnings && npx tsc && npx tsc -p test/tsconfig.json",
     "lint:fix": "npx biome check --write .",
     "format": "npx biome format --write .",
     "build": "npm run lint && npx tsc -p tsconfig.json",
