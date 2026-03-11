@@ -23,7 +23,6 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
     "lint": "if [ -n \"$CI\" ]; then (npm run lint:strict) else (npm run lint:default) fi",
     "lint:default": "npx biome check . --diagnostic-level=warn && npx tsc && npx tsc -p test/tsconfig.json",
     "lint:strict": "npx biome check . --diagnostic-level=warn --error-on-warnings && npx tsc && npx tsc -p test/tsconfig.json",
@@ -40,7 +39,6 @@
   "devDependencies": {
     "@biomejs/biome": "2.3.13",
     "@types/node": "^18.19.130",
-    "coveralls": "^3.1.1",
     "typescript": "^5.9.3"
   },
   "engines": {
