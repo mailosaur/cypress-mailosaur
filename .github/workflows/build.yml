@@ -59,4 +59,5 @@ jobs:
         uses: ./.github/actions/notify
         with:
           webhook-url: ${{ secrets.NOTIFICATION_URL }}
+          needs: ${{ toJson(needs) }}
           data: '{"matrixBuildResult": "${{ needs.build.result }}"}'
