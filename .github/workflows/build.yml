@@ -16,18 +16,12 @@ permissions:
 
 jobs:
   build:
-    name: Build (${{ matrix.environment }})
+    name: Build
     runs-on: ${{ vars.LINUX }}
     timeout-minutes: 10
-    
-    strategy:
-      fail-fast: false
-      max-parallel: 1
-      matrix:
-        environment: [live, next]
 
     env:
-      CYPRESS_MAILOSAUR_BASE_URL: ${{ matrix.environment == 'live' && 'https://mailosaur.com/' || 'https://next.mailosaur.com/' }}
+      CYPRESS_MAILOSAUR_BASE_URL: https://mailosaur.com/
       CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.MAILOSAUR_API_KEY }}
       CYPRESS_MAILOSAUR_SERVER: ${{ secrets.MAILOSAUR_SERVER }}
       CYPRESS_MAILOSAUR_VERIFIED_DOMAIN: ${{ secrets.MAILOSAUR_VERIFIED_DOMAIN }}
